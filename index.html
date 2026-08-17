@@ -414,6 +414,12 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label">¿Cuándo se realizó la espiga?</label>
+            <input type="date" class="form-input" id="fechaEspiga" required />
+            <p style="font-size: 12px; color: var(--muted); margin-top: 4px;">Indicá la fecha en que se hizo la reunión de espiga.</p>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">Monto de la ofrenda</label>
             <input type="number" class="form-input" id="ofrenda" placeholder="Ej: 5000" required />
           </div>
@@ -490,7 +496,8 @@
 
   <script>
     // ===== URL DE TU APP SCRIPT PUBLICADO =====
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_OGlSwG4LY90Rd72xyFsw2tdJnmjweFobFYORc0Qnav1X5t-2WiUsOq9JzUmVL8Qm-g/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby880-_D6Rgaa-DRNZ6sw9LOmt2sQehUf5Njdbjn5Nuxi7xvlWVBnNQnjzEDlzNoRx6/exec";
+    const SECURITY_TOKEN = "GRAN_REY_SECURE_2026"; // Token para asegurar la conexión
 
     // Variables globales
     let ministeriosData = [];
@@ -499,7 +506,7 @@
     // Inicializar
     window.onload = async () => {
       try {
-        const response = await fetch(SCRIPT_URL + "?action=getData");
+        const response = await fetch(SCRIPT_URL + "?action=getData&token=" + SECURITY_TOKEN);
         if (!response.ok) throw new Error("Network error");
         const data = await response.json();
         ministeriosData = data.ministerios;
@@ -538,7 +545,7 @@
     }
 
     function validateStep1() {
-      const ids = ["ministerio", "mentor", "lider", "asistentes", "ausencias", "motivo", "ofrenda"];
+      const ids = ["ministerio", "mentor", "lider", "asistentes", "ausencias", "motivo", "fechaEspiga", "ofrenda"];
       let isValid = true;
 
       ids.forEach(id => {
@@ -589,15 +596,33 @@
       goToStep(3);
     }
 
+    function escapeHTML(str) {
+      if (!str) return "";
+      return str.toString().replace(/[&<>"']/g, function (m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m];
+      });
+    }
+
     function buildSummary() {
+      const fechaEspigaRaw = document.getElementById("fechaEspiga").value;
+      const [anio, mes, dia] = fechaEspigaRaw.split('-');
+      const fechaEspigaFormateada = `${dia}/${mes}/${anio}`;
+
       const html = `
-        <div class="summary-item"><div class="summary-label">Ministerio</div><div class="summary-value">${document.getElementById("ministerio").value}</div></div>
-        <div class="summary-item"><div class="summary-label">Mentor</div><div class="summary-value">${document.getElementById("mentor").value}</div></div>
-        <div class="summary-item"><div class="summary-label">Líder que carga</div><div class="summary-value">${document.getElementById("lider").value}</div></div>
-        <div class="summary-item"><div class="summary-label">Asistentes</div><div class="summary-value">${document.getElementById("asistentes").value}</div></div>
-        <div class="summary-item"><div class="summary-label">Ausencias</div><div class="summary-value">${document.getElementById("ausencias").value}</div></div>
-        <div class="summary-item"><div class="summary-label">Motivo de Oración</div><div class="summary-value">${document.getElementById("motivo").value}</div></div>
-        <div class="summary-item"><div class="summary-label">Ofrenda</div><div class="summary-value">$${document.getElementById("ofrenda").value}</div></div>
+        <div class="summary-item"><div class="summary-label">Ministerio</div><div class="summary-value">${escapeHTML(document.getElementById("ministerio").value)}</div></div>
+        <div class="summary-item"><div class="summary-label">Mentor</div><div class="summary-value">${escapeHTML(document.getElementById("mentor").value)}</div></div>
+        <div class="summary-item"><div class="summary-label">Líder que carga</div><div class="summary-value">${escapeHTML(document.getElementById("lider").value)}</div></div>
+        <div class="summary-item"><div class="summary-label">Fecha de la Espiga</div><div class="summary-value">${escapeHTML(fechaEspigaFormateada)}</div></div>
+        <div class="summary-item"><div class="summary-label">Asistentes</div><div class="summary-value">${escapeHTML(document.getElementById("asistentes").value)}</div></div>
+        <div class="summary-item"><div class="summary-label">Ausencias</div><div class="summary-value">${escapeHTML(document.getElementById("ausencias").value)}</div></div>
+        <div class="summary-item"><div class="summary-label">Motivo de Oración</div><div class="summary-value">${escapeHTML(document.getElementById("motivo").value)}</div></div>
+        <div class="summary-item"><div class="summary-label">Ofrenda</div><div class="summary-value">${escapeHTML(document.getElementById("ofrenda").value)}</div></div>
         <div class="summary-item">
           <div class="summary-label">Foto Adjunta</div>
           <img src="data:${currentData.fotoMimeType};base64,${currentData.fotoBase64}" style="max-width: 100px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border);" />
@@ -609,7 +634,12 @@
     async function submitData() {
       document.getElementById("loader").style.display = "flex";
 
+      const fechaEspigaRaw2 = document.getElementById("fechaEspiga").value;
+      const [anio2, mes2, dia2] = fechaEspigaRaw2.split('-');
+      const fechaEspigaEnvio = `${dia2}/${mes2}/${anio2}`;
+
       const payload = {
+        token: SECURITY_TOKEN,
         ministerio: document.getElementById("ministerio").value,
         mentor: document.getElementById("mentor").value,
         lider: document.getElementById("lider").value,
@@ -617,6 +647,7 @@
         ausencias: document.getElementById("ausencias").value,
         motivo: document.getElementById("motivo").value,
         ofrenda: document.getElementById("ofrenda").value,
+        fechaEspiga: fechaEspigaEnvio,
         fotoBase64: currentData.fotoBase64,
         fotoMimeType: currentData.fotoMimeType
       };
