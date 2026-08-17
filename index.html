@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <title>Carga de Espigas - BONI Web</title>
+  <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@400;700;900&display=swap"
@@ -24,10 +24,13 @@
       --primary: #1d1a18; /* Negro/Marrón muy oscuro */
       --primary-glow: rgba(29, 26, 24, 0.2);
       --accent: #debc74;
+      --accent-light: #fdf8eb;
       --text: #1d1a18;
       --muted: #4b5563;
       --border: #d1d5db;
       --destructive: #ef4444;
+      --success: #16a34a;
+      --warning: #d97706;
       --radius: 20px;
       --radius-sm: 12px;
       --font-sans: 'Inter', sans-serif;
@@ -42,28 +45,72 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 40px 24px 100px;
+      padding: 30px 20px 100px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 24px;
       animation: fadeInDown 0.6s ease;
     }
 
     .header h1 {
       font-family: 'Outfit', sans-serif;
-      font-size: 36px;
+      font-size: 34px;
       font-weight: 800;
       color: var(--primary);
+      letter-spacing: -0.5px;
     }
 
     .header p {
-      color: var(--muted);
-      font-size: 16px;
-      margin-top: 8px;
+      color: #3b3530;
+      font-size: 15px;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    /* Tab Switcher */
+    .tab-nav-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .tab-nav {
+      display: inline-flex;
+      background: rgba(29, 26, 24, 0.12);
+      padding: 6px;
+      border-radius: 999px;
+      gap: 6px;
+      backdrop-filter: blur(8px);
+    }
+
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: var(--font-sans);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(29, 26, 24, 0.25);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: rgba(29, 26, 24, 0.08);
     }
 
     .main-card {
@@ -71,7 +118,7 @@
       border: 1px solid var(--border);
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     }
 
     .progress-track {
@@ -86,28 +133,38 @@
     }
 
     .card-body {
-      padding: 32px;
+      padding: 28px;
     }
 
     @media (min-width: 768px) {
       .card-body {
-        padding: 48px;
+        padding: 44px;
       }
     }
 
     .step-title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       font-family: 'Outfit', sans-serif;
+      color: var(--primary);
     }
 
     .step-section {
       display: none;
-      animation: fadeIn 0.4s ease;
+      animation: fadeIn 0.35s ease;
     }
 
     .step-section.active {
+      display: block;
+    }
+
+    .app-section {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .app-section.active {
       display: block;
     }
 
@@ -130,8 +187,8 @@
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 14px 18px;
-      font-size: 16px;
+      padding: 13px 16px;
+      font-size: 15px;
       color: var(--text);
       outline: none;
       transition: all 0.2s;
@@ -148,13 +205,34 @@
 
     .form-textarea {
       resize: vertical;
-      min-height: 100px;
+      min-height: 90px;
+    }
+
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-with-icon input {
+      padding-right: 46px;
+    }
+
+    .toggle-password-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--muted);
+      padding: 4px 8px;
     }
 
     .file-upload-area {
       border: 2px dashed var(--primary);
       border-radius: var(--radius);
-      padding: 40px 20px;
+      padding: 35px 20px;
       text-align: center;
       background: rgba(29, 26, 24, 0.03);
       cursor: pointer;
@@ -172,10 +250,10 @@
     }
 
     .file-upload-text {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--primary);
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .file-preview {
@@ -190,9 +268,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 16px 32px;
+      gap: 8px;
+      padding: 14px 28px;
       border-radius: var(--radius-sm);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       border: none;
       cursor: pointer;
@@ -208,7 +287,7 @@
     }
 
     .btn:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
     .btn-primary {
@@ -232,13 +311,20 @@
       border-color: var(--text);
     }
 
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 13px;
+      border-radius: 8px;
+      width: auto;
+    }
+
     .nav-buttons {
       display: flex;
       justify-content: space-between;
       gap: 16px;
-      margin-top: 32px;
+      margin-top: 28px;
       border-top: 1px solid var(--border);
-      padding-top: 24px;
+      padding-top: 20px;
     }
 
     @media (max-width: 767px) {
@@ -251,14 +337,14 @@
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
     }
 
     .summary-item {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 16px;
+      padding-bottom: 14px;
     }
 
     .summary-item:last-child {
@@ -268,16 +354,16 @@
     }
 
     .summary-label {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--muted);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .summary-value {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       color: var(--text);
     }
@@ -285,31 +371,393 @@
     .loader-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(255, 255, 255, 0.9);
-      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      z-index: 1000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       display: none;
+      backdrop-filter: blur(4px);
     }
 
     .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #e2e8f0;
+      width: 48px;
+      height: 48px;
+      border: 4px solid #e2e8f0;
       border-top-color: var(--primary);
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 14px;
+    }
+
+    .success-icon {
+      width: 70px;
+      height: 70px;
+      background: #22c55e;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 20px;
+    }
+
+    /* ====== ESTILOS DE CONSULTA Y ACORDEÓN DE MESES ====== */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .metric-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .search-filter-bar {
       margin-bottom: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .accordion-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .months-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .month-accordion {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      transition: all 0.25s ease;
+    }
+
+    .month-accordion.active {
+      border-color: #c9a759;
+      box-shadow: 0 4px 14px rgba(222, 188, 116, 0.2);
+    }
+
+    .month-header {
+      width: 100%;
+      background: #f8fafc;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background-color 0.2s ease;
+      user-select: none;
+      gap: 12px;
+    }
+
+    .month-accordion.active .month-header {
+      background: #fdf8eb;
+      border-bottom: 1px solid #f3d79b;
+    }
+
+    .month-header:hover {
+      background: #f1f5f9;
+    }
+
+    .month-accordion.active .month-header:hover {
+      background: #faefd4;
+    }
+
+    .month-header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .month-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .month-badge {
+      background: #e2e8f0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .month-accordion.active .month-badge {
+      background: #debc74;
+      color: var(--primary);
+    }
+
+    .month-header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .month-total-ofrenda {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: #15803d;
+    }
+
+    .month-chevron {
+      font-size: 13px;
+      color: var(--muted);
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .month-accordion.active .month-chevron {
+      transform: rotate(180deg);
+    }
+
+    .month-body {
+      display: none;
+      padding: 16px;
+      background: #ffffff;
+    }
+
+    .month-accordion.active .month-body {
+      display: block;
+    }
+
+    .records-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .record-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+      border-left: 5px solid var(--primary);
+    }
+
+    .record-card:hover {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .record-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .record-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fdf8eb;
+      color: #855913;
+      border: 1px solid #f3d79b;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-badge.pendiente {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.confirmado,
+    .status-badge.recibido,
+    .status-badge.enviado {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .record-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    @media (min-width: 600px) {
+      .record-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .record-field {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #edf2f7;
+    }
+
+    .record-field.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .field-title {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 2px;
+    }
+
+    .field-content {
+      color: var(--text);
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .record-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ofrenda-tag {
+      font-size: 16px;
+      font-weight: 800;
+      color: #15803d;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      background: #f8fafc;
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border);
+    }
+
+    .empty-state-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    /* Modal para ver fotos */
+    .photo-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .photo-modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: #fff;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .photo-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+
+    .photo-modal img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .close-modal-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 4px;
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -319,9 +767,8 @@
     @keyframes fadeInDown {
       from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-16px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -333,195 +780,388 @@
         transform: rotate(360deg);
       }
     }
-
-    .success-icon {
-      width: 80px;
-      height: 80px;
-      background: #22c55e;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      margin: 0 auto 24px;
-    }
   </style>
 </head>
 
 <body>
+  <!-- Loader Global -->
   <div class="loader-overlay" id="loader">
     <div class="spinner"></div>
-    <h3 style="color: var(--primary); font-family: 'Outfit', sans-serif;">Procesando...</h3>
-    <p style="color: var(--muted);">Guardando datos y subiendo imagen</p>
+    <h3 id="loaderTitle" style="color: var(--primary); font-family: 'Outfit', sans-serif;">Procesando...</h3>
+    <p id="loaderSub" style="color: var(--muted);">Por favor esperá un momento</p>
+  </div>
+
+  <!-- Modal para ver foto completa -->
+  <div class="photo-modal" id="photoModal" onclick="closePhotoModal(event)">
+    <div class="photo-modal-content" onclick="event.stopPropagation()">
+      <div class="photo-modal-header">
+        <span style="font-weight: 700; font-size: 14px;" id="modalTitle">Foto del Sobre</span>
+        <button class="close-modal-btn" onclick="closePhotoModal()">&times;</button>
+      </div>
+      <img id="modalImage" src="" alt="Sobre de Espiga" />
+      <div style="padding: 10px 16px; text-align: right; background: #f8fafc;">
+        <a id="modalOpenTab" href="#" target="_blank" class="btn btn-outline btn-sm">Abrir en pestaña nueva ↗</a>
+      </div>
+    </div>
   </div>
 
   <div class="container">
+    <!-- Header -->
     <div class="header">
-      <h1>Carga de Espigas</h1>
-      <p>Completá los datos para registrar el sobre de tu ministerio</p>
+      <h1>Carga y Control de Espigas</h1>
+      <p>Iglesia Gran Rey • Sistema de Sobres Ministeriales</p>
     </div>
 
-    <div class="main-card">
-      <div class="progress-track">
-        <div class="progress-fill" id="progressBar" style="width: 33%"></div>
-      </div>
-
-      <div class="card-body">
-
-        <!-- STEP 1: Datos -->
-        <div class="step-section active" id="step-1">
-          <h2 class="step-title">1. Datos del Ministerio</h2>
-
-          <div class="form-group">
-            <label class="form-label">Ministerio al que perteneces</label>
-            <select class="form-select" id="ministerio" required onchange="updateLideresDropdown()">
-              <option value="">Cargando ministerios...</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">¿Quién es tu mentor?</label>
-            <input type="text" class="form-input" id="mentor" placeholder="Ej: Marcos García" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">¿Quién es el líder que carga el sobre?</label>
-            <select class="form-select" id="lider" required>
-              <option value="">Primero selecciona un ministerio</option>
-            </select>
-            <p style="font-size: 12px; color: var(--muted); margin-top: 4px;">Solo líderes autorizados aparecerán aquí.
-            </p>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Nombres de las personas que asistieron</label>
-            <textarea class="form-textarea" id="asistentes"
-              placeholder="Ej: Juan Pérez, Gustavo Ramirez y Claudio Espinosa. (Si hay alguien nuevo, agregá la palabra 'NUEVO')"
-              required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">¿Qué personas NO asistieron y motivo?</label>
-            <textarea class="form-textarea" id="ausencias"
-              placeholder="Ej: María López por viaje, Carlos Ruiz por enfermedad. O 'Ninguno'" required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Motivo de oración pedido en la espiga</label>
-            <textarea class="form-textarea" id="motivo" placeholder="Ej: Juan Pérez por trabajo. O 'Ninguno'"
-              required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">¿Cuándo se realizó la espiga?</label>
-            <input type="date" class="form-input" id="fechaEspiga" required />
-            <p style="font-size: 12px; color: var(--muted); margin-top: 4px;">Indicá la fecha en que se hizo la reunión de espiga.</p>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Monto de la ofrenda</label>
-            <input type="number" class="form-input" id="ofrenda" placeholder="Ej: 5000" required />
-          </div>
-
-          <div class="nav-buttons" style="justify-content: flex-end;">
-            <button class="btn btn-primary" onclick="validateStep1()">Siguiente paso ›</button>
-          </div>
-        </div>
-
-        <!-- STEP 2: Foto -->
-        <div class="step-section" id="step-2">
-          <h2 class="step-title">2. Foto del Sobre</h2>
-          <p style="color: var(--muted); margin-bottom: 24px;">Por favor subí una foto clara del sobre de espiga.</p>
-
-          <div id="photoOptionsContainer" style="display: flex; gap: 16px; margin-bottom: 24px;">
-            <div class="file-upload-area" style="flex: 1; padding: 30px 10px;" onclick="document.getElementById('cameraInput').click()">
-              <div style="font-size: 40px;">📷</div>
-              <div class="file-upload-text" style="font-size: 15px; margin-top: 12px;">Tomar Foto</div>
-              <p style="font-size: 11px; color: var(--muted); margin-top: 4px;">Usar la cámara</p>
-            </div>
-            <div class="file-upload-area" style="flex: 1; padding: 30px 10px;" onclick="document.getElementById('galleryInput').click()">
-              <div style="font-size: 40px;">🖼️</div>
-              <div class="file-upload-text" style="font-size: 15px; margin-top: 12px;">De Galería</div>
-              <p style="font-size: 11px; color: var(--muted); margin-top: 4px;">Subir archivo</p>
-            </div>
-          </div>
-
-          <div class="file-upload-area" id="dropArea" style="display: none; padding: 20px;">
-            <div class="file-upload-text" id="fileText" style="margin-top: 0; color: #22c55e;">✅ Foto seleccionada</div>
-            <img id="imagePreview" class="file-preview" src="" alt="Vista previa" style="display: block; margin: 16px auto 0;" />
-            <div style="display: flex; gap: 10px; margin-top: 16px;">
-              <button class="btn btn-outline" style="flex: 1; padding: 10px;" onclick="document.getElementById('cameraInput').click()">📷 Retomar</button>
-              <button class="btn btn-outline" style="flex: 1; padding: 10px;" onclick="document.getElementById('galleryInput').click()">🖼️ Cambiar</button>
-            </div>
-          </div>
-
-          <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="handleFile(this)" />
-          <input type="file" id="galleryInput" accept="image/*" style="display: none;" onchange="handleFile(this)" />
-
-          <div class="nav-buttons">
-            <button class="btn btn-outline" onclick="goToStep(1)">‹ Volver</button>
-            <button class="btn btn-primary" onclick="validateStep2()">Siguiente paso ›</button>
-          </div>
-        </div>
-
-        <!-- STEP 3: Confirmación -->
-        <div class="step-section" id="step-3">
-          <h2 class="step-title">3. Confirmar Datos</h2>
-          <p style="color: var(--muted); margin-bottom: 24px;">Revisá que toda la información sea correcta antes de
-            enviar.</p>
-
-          <div class="summary-box" id="summaryBox">
-            <!-- Rellenado con JS -->
-          </div>
-
-          <div class="nav-buttons">
-            <button class="btn btn-outline" onclick="goToStep(2)">‹ Editar Datos</button>
-            <button class="btn btn-primary" onclick="submitData()">✅ Enviar Registro</button>
-          </div>
-        </div>
-
-        <!-- STEP 4: Éxito -->
-        <div class="step-section" id="step-4" style="text-align: center; padding: 40px 0;">
-          <div class="success-icon">✓</div>
-          <h2 class="step-title" style="margin-bottom: 16px;">¡Sobre Cargado con Éxito!</h2>
-          <p style="color: var(--muted); font-size: 16px; margin-bottom: 32px;">Los datos se han guardado correctamente
-            y la foto ha sido procesada. Gracias por tu fidelidad.</p>
-          <button class="btn btn-primary" onclick="window.location.reload()">Cargar otro sobre</button>
-        </div>
-
+    <!-- Navegación entre Cargar y Consultar -->
+    <div class="tab-nav-wrapper">
+      <div class="tab-nav">
+        <button class="tab-btn active" id="tabCargarBtn" onclick="switchAppTab('cargar')">
+          <span>📝</span> Cargar Sobre
+        </button>
+        <button class="tab-btn" id="tabConsultarBtn" onclick="switchAppTab('consultar')">
+          <span>🔍</span> Consultar Historial
+        </button>
       </div>
     </div>
+
+    <!-- ========================================================= -->
+    <!-- SECCIÓN 1: CARGA DE SOBRES (FORMULARIO EN 3 PASOS)        -->
+    <!-- ========================================================= -->
+    <div class="app-section active" id="section-cargar">
+      <div class="main-card">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar" style="width: 33%"></div>
+        </div>
+
+        <div class="card-body">
+
+          <!-- STEP 1: Datos -->
+          <div class="step-section active" id="step-1">
+            <h2 class="step-title">1. Datos del Ministerio</h2>
+
+            <div class="form-group">
+              <label class="form-label">Ministerio al que perteneces</label>
+              <select class="form-select" id="ministerio" required onchange="updateLideresDropdown()">
+                <option value="">Cargando ministerios...</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">¿Quién es tu mentor?</label>
+              <input type="text" class="form-input" id="mentor" placeholder="Ej: Marcos García" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">¿Quién es el líder que carga el sobre?</label>
+              <select class="form-select" id="lider" required>
+                <option value="">Primero selecciona un ministerio</option>
+              </select>
+              <p style="font-size: 12px; color: var(--muted); margin-top: 4px;">Solo líderes autorizados aparecerán aquí.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Nombres de las personas que asistieron</label>
+              <textarea class="form-textarea" id="asistentes"
+                placeholder="Ej: Juan Pérez, Gustavo Ramirez y Claudio Espinosa. (Si hay alguien nuevo, agregá la palabra 'NUEVO')"
+                required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">¿Qué personas NO asistieron y motivo?</label>
+              <textarea class="form-textarea" id="ausencias"
+                placeholder="Ej: María López por viaje, Carlos Ruiz por enfermedad. O 'Ninguno'" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Motivo de oración pedido en la espiga</label>
+              <textarea class="form-textarea" id="motivo" placeholder="Ej: Juan Pérez por trabajo. O 'Ninguno'"
+                required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">¿Cuándo se realizó la espiga?</label>
+              <input type="date" class="form-input" id="fechaEspiga" required />
+              <p style="font-size: 12px; color: var(--muted); margin-top: 4px;">Indicá la fecha en que se hizo la reunión de espiga.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Monto de la ofrenda ($)</label>
+              <input type="number" class="form-input" id="ofrenda" placeholder="Ej: 5000" required />
+            </div>
+
+            <div class="nav-buttons" style="justify-content: flex-end;">
+              <button class="btn btn-primary" onclick="validateStep1()">Siguiente paso ›</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Foto -->
+          <div class="step-section" id="step-2">
+            <h2 class="step-title">2. Foto del Sobre</h2>
+            <p style="color: var(--muted); margin-bottom: 24px;">Por favor subí una foto clara del sobre de espiga.</p>
+
+            <div id="photoOptionsContainer" style="display: flex; gap: 16px; margin-bottom: 24px;">
+              <div class="file-upload-area" style="flex: 1; padding: 30px 10px;" onclick="document.getElementById('cameraInput').click()">
+                <div style="font-size: 40px;">📷</div>
+                <div class="file-upload-text" style="font-size: 15px; margin-top: 12px;">Tomar Foto</div>
+                <p style="font-size: 11px; color: var(--muted); margin-top: 4px;">Usar la cámara</p>
+              </div>
+              <div class="file-upload-area" style="flex: 1; padding: 30px 10px;" onclick="document.getElementById('galleryInput').click()">
+                <div style="font-size: 40px;">🖼️</div>
+                <div class="file-upload-text" style="font-size: 15px; margin-top: 12px;">De Galería</div>
+                <p style="font-size: 11px; color: var(--muted); margin-top: 4px;">Subir archivo</p>
+              </div>
+            </div>
+
+            <div class="file-upload-area" id="dropArea" style="display: none; padding: 20px;">
+              <div class="file-upload-text" id="fileText" style="margin-top: 0; color: #22c55e;">✅ Foto seleccionada</div>
+              <img id="imagePreview" class="file-preview" src="" alt="Vista previa" style="display: block; margin: 16px auto 0;" />
+              <div style="display: flex; gap: 10px; margin-top: 16px;">
+                <button class="btn btn-outline" style="flex: 1; padding: 10px;" onclick="document.getElementById('cameraInput').click()">📷 Retomar</button>
+                <button class="btn btn-outline" style="flex: 1; padding: 10px;" onclick="document.getElementById('galleryInput').click()">🖼️ Cambiar</button>
+              </div>
+            </div>
+
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="handleFile(this)" />
+            <input type="file" id="galleryInput" accept="image/*" style="display: none;" onchange="handleFile(this)" />
+
+            <div class="nav-buttons">
+              <button class="btn btn-outline" onclick="goToStep(1)">‹ Volver</button>
+              <button class="btn btn-primary" onclick="validateStep2()">Siguiente paso ›</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Confirmación -->
+          <div class="step-section" id="step-3">
+            <h2 class="step-title">3. Confirmar Datos</h2>
+            <p style="color: var(--muted); margin-bottom: 24px;">Revisá que toda la información sea correcta antes de enviar.</p>
+
+            <div class="summary-box" id="summaryBox"></div>
+
+            <div class="nav-buttons">
+              <button class="btn btn-outline" onclick="goToStep(2)">‹ Editar Datos</button>
+              <button class="btn btn-primary" onclick="submitData()">✅ Enviar Registro</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Éxito -->
+          <div class="step-section" id="step-4" style="text-align: center; padding: 40px 0;">
+            <div class="success-icon">✓</div>
+            <h2 class="step-title" style="margin-bottom: 16px;">¡Sobre Cargado con Éxito!</h2>
+            <p style="color: var(--muted); font-size: 16px; margin-bottom: 32px;">Los datos se han guardado correctamente en la hoja y la foto ha sido procesada.</p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+              <button class="btn btn-outline" onclick="switchAppTab('consultar')">🔍 Ver en el Historial</button>
+              <button class="btn btn-primary" onclick="resetForm()">Cargar otro sobre</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- SECCIÓN 2: CONSULTA Y CONTROL DE HISTORIAL EN VIVO        -->
+    <!-- ========================================================= -->
+    <div class="app-section" id="section-consultar">
+      <div class="main-card">
+        <div class="card-body">
+          <h2 class="step-title">🔍 Consulta de Sobres por Ministerio</h2>
+          <p style="color: var(--muted); margin-bottom: 24px;">Seleccioná tu ministerio, líder y clave de acceso para revisar las semanas cargadas en vivo.</p>
+
+          <!-- Formulario de Búsqueda y Autenticación -->
+          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Ministerio</label>
+                <select class="form-select" id="consMinisterio" onchange="onMinisterioChange()">
+                  <option value="">Selecciona tu ministerio...</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Líder</label>
+                <select class="form-select" id="consLider" onchange="onLiderChange()">
+                  <option value="TODOS">👥 Todos los líderes</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Clave del Ministerio</label>
+                <div class="input-with-icon">
+                  <input type="password" class="form-input" id="consPassword" placeholder="Clave de acceso..." />
+                  <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('consPassword')">👁️</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+              <button class="btn btn-primary" onclick="consultarHistorial()">
+                <span>🔍</span> Consultar Sobres
+              </button>
+            </div>
+          </div>
+
+          <!-- Resultados de Consulta -->
+          <div id="consultaResultados" style="display: none;">
+            <!-- Métricas Resumen -->
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <div class="metric-number" id="metricaTotal">0</div>
+                <div class="metric-label">Sobres Registrados</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-number" style="font-size: 20px;" id="metricaUltimaFecha">-</div>
+                <div class="metric-label">Última Espiga</div>
+              </div>
+              <div class="metric-card" id="metricaOfrendaCard" style="display: none;">
+                <div class="metric-number" style="color: #15803d;" id="metricaOfrendaTotal">$0</div>
+                <div class="metric-label" id="metricaOfrendaLabel">Total Ofrendas (Admin)</div>
+              </div>
+            </div>
+
+            <!-- Buscador Rápido interno -->
+            <div class="search-filter-bar">
+              <input type="text" class="form-input" id="busquedaFiltro" placeholder="🔍 Filtrar por fecha, asistente, ausencia, motivo..." onkeyup="filtrarResultadosLocales()" />
+            </div>
+
+            <!-- Controles de Acordeón -->
+            <div class="accordion-controls">
+              <span style="font-size: 13px; font-weight: 600; color: var(--muted);" id="mesesCountText">Meses registrados</span>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="expandirTodosMeses(true)">📂 Abrir todos</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="expandirTodosMeses(false)">📁 Cerrar todos</button>
+              </div>
+            </div>
+
+            <!-- Contenedor Desplegable por Meses -->
+            <div class="months-container" id="monthsContainer"></div>
+          </div>
+
+          <!-- Estado Vacío Inicial -->
+          <div class="empty-state" id="consultaEmptyState">
+            <div class="empty-state-icon">📋</div>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Consultá el estado de tus sobres</h3>
+            <p style="font-size: 13px; color: var(--muted);">Elegí tu ministerio y clave para ver los sobres organizados por mes en tiempo real.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // ===== URL DE TU APP SCRIPT PUBLICADO =====
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzA2sd6h_muRhXPYSW6_jRpREM7xsZpIp0PX3R15n25Ps6azxLAhnT_xUYq4b-l-wA/exec";
-    const SECURITY_TOKEN = "GRAN_REY_SECURE_2026"; // Token para asegurar la conexión
+    // ===== URL DE CONEXIÓN CON GOOGLE APPS SCRIPT =====
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwz_gts_KSkfKGiH7PS2E8S82WeKlCd46JyVbnMT-3r71VDGed_kK7FJReaK_rFEQEs/exec";
 
-    // Variables globales
+    const MESES_ES = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
+    // Variables globales (Sin contraseñas en el frontend por seguridad)
     let ministeriosData = [];
     let currentData = { fotoBase64: null, fotoMimeType: null };
+    let registrosCargados = [];
+    let cacheMinisterioData = {};
+    let esUsuarioMaster = false;
 
-    // Inicializar
+    // Inicializar al cargar la página
     window.onload = async () => {
-      try {
-        const response = await fetch(SCRIPT_URL + "?action=getData&token=" + SECURITY_TOKEN);
-        if (!response.ok) throw new Error("Network error");
-        const data = await response.json();
-        ministeriosData = data.ministerios;
-
-        const minSelect = document.getElementById("ministerio");
-        minSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
-        ministeriosData.forEach(m => {
-          minSelect.innerHTML += `<option value="${m.name}">${m.name}</option>`;
-        });
-      } catch (err) {
-        console.error("No se pudo cargar los ministerios. Asegúrate de poner la SCRIPT_URL correcta.", err);
-        document.getElementById("ministerio").innerHTML = '<option value="">Error al cargar ministerios</option>';
-      }
+      await cargarMinisterios();
     };
 
+    // Alternar entre pestañas "Cargar Sobre" y "Consultar Historial"
+    function switchAppTab(tab) {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".app-section").forEach(sec => sec.classList.remove("active"));
+
+      if (tab === 'cargar') {
+        document.getElementById("tabCargarBtn").classList.add("active");
+        document.getElementById("section-cargar").classList.add("active");
+      } else {
+        document.getElementById("tabConsultarBtn").classList.add("active");
+        document.getElementById("section-consultar").classList.add("active");
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // Cargar ministerios y líderes desde Google Apps Script
+    async function cargarMinisterios() {
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getData`);
+        if (!response.ok) throw new Error("Error de conexión al servidor");
+        const data = await response.json();
+        
+        if (data.ministerios) {
+          ministeriosData = data.ministerios;
+          
+          // Poblar selector de carga
+          const minSelect = document.getElementById("ministerio");
+          minSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
+          
+          // Poblar selector de consulta
+          const consMinSelect = document.getElementById("consMinisterio");
+          consMinSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
+
+          ministeriosData.forEach(m => {
+            minSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
+            consMinSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
+          });
+        }
+      } catch (err) {
+        console.error("Error al cargar ministerios:", err);
+        document.getElementById("ministerio").innerHTML = '<option value="">Error al cargar ministerios</option>';
+        document.getElementById("consMinisterio").innerHTML = '<option value="">Error al cargar ministerios</option>';
+      }
+    }
+
+    function togglePasswordVisibility(id) {
+      const input = document.getElementById(id);
+      if (input.type === "password") {
+        input.type = "text";
+      } else {
+        input.type = "password";
+      }
+    }
+
+    // Cuando cambia el ministerio en la consulta
+    function onMinisterioChange() {
+      const minName = document.getElementById("consMinisterio").value;
+      const liderSelect = document.getElementById("consLider");
+      liderSelect.innerHTML = '<option value="TODOS">👥 Todos los líderes</option>';
+
+      const ministerio = ministeriosData.find(m => m.name === minName);
+      if (ministerio && ministerio.lideres) {
+        ministerio.lideres.forEach(l => {
+          liderSelect.innerHTML += `<option value="${escapeHTML(l)}">${escapeHTML(l)}</option>`;
+        });
+      }
+
+      // Dejar campo de clave vacío para que el usuario la ingrese manualmente
+      const passInput = document.getElementById("consPassword");
+      if (passInput) {
+        passInput.value = "";
+        passInput.placeholder = `Ingresá la clave de ${minName || 'tu ministerio'}...`;
+      }
+    }
+
+    function onLiderChange() {
+      const minName = document.getElementById("consMinisterio").value;
+      const lider = document.getElementById("consLider").value;
+      if (cacheMinisterioData[minName]) {
+        const todosLosRegistros = cacheMinisterioData[minName];
+        if (lider && lider.toUpperCase() !== "TODOS" && lider.toUpperCase() !== "ALL") {
+          registrosCargados = todosLosRegistros.filter(r => matchNames(r.lider, lider));
+        } else {
+          registrosCargados = todosLosRegistros;
+        }
+        renderizarHistorial(registrosCargados);
+      }
+    }
+
+    // ==========================================
+    // FUNCIONES DE CARGA (FORMULARIO STEP-BY-STEP)
+    // ==========================================
     function updateLideresDropdown() {
       const minName = document.getElementById("ministerio").value;
       const liderSelect = document.getElementById("lider");
@@ -530,7 +1170,7 @@
       const ministerio = ministeriosData.find(m => m.name === minName);
       if (ministerio && ministerio.lideres) {
         ministerio.lideres.forEach(l => {
-          liderSelect.innerHTML += `<option value="${l}">${l}</option>`;
+          liderSelect.innerHTML += `<option value="${escapeHTML(l)}">${escapeHTML(l)}</option>`;
         });
       }
     }
@@ -578,7 +1218,6 @@
           document.getElementById("imagePreview").style.display = "block";
           document.getElementById("dropArea").classList.add("has-file");
 
-          // Extraer base64
           const result = e.target.result;
           currentData.fotoBase64 = result.split(',')[1];
           currentData.fotoMimeType = result.substring(result.indexOf(':') + 1, result.indexOf(';'));
@@ -596,23 +1235,10 @@
       goToStep(3);
     }
 
-    function escapeHTML(str) {
-      if (!str) return "";
-      return str.toString().replace(/[&<>"']/g, function (m) {
-        return {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;'
-        }[m];
-      });
-    }
-
     function buildSummary() {
       const fechaEspigaRaw = document.getElementById("fechaEspiga").value;
-      const [anio, mes, dia] = fechaEspigaRaw.split('-');
-      const fechaEspigaFormateada = `${dia}/${mes}/${anio}`;
+      const [anio, mes, dia] = fechaEspigaRaw ? fechaEspigaRaw.split('-') : ['-', '-', '-'];
+      const fechaEspigaFormateada = dia && mes && anio ? `${dia}/${mes}/${anio}` : '-';
 
       const html = `
         <div class="summary-item"><div class="summary-label">Ministerio</div><div class="summary-value">${escapeHTML(document.getElementById("ministerio").value)}</div></div>
@@ -622,25 +1248,31 @@
         <div class="summary-item"><div class="summary-label">Asistentes</div><div class="summary-value">${escapeHTML(document.getElementById("asistentes").value)}</div></div>
         <div class="summary-item"><div class="summary-label">Ausencias</div><div class="summary-value">${escapeHTML(document.getElementById("ausencias").value)}</div></div>
         <div class="summary-item"><div class="summary-label">Motivo de Oración</div><div class="summary-value">${escapeHTML(document.getElementById("motivo").value)}</div></div>
-        <div class="summary-item"><div class="summary-label">Ofrenda</div><div class="summary-value">${escapeHTML(document.getElementById("ofrenda").value)}</div></div>
+        <div class="summary-item"><div class="summary-label">Ofrenda</div><div class="summary-value">$${escapeHTML(document.getElementById("ofrenda").value)}</div></div>
         <div class="summary-item">
           <div class="summary-label">Foto Adjunta</div>
-          <img src="data:${currentData.fotoMimeType};base64,${currentData.fotoBase64}" style="max-width: 100px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border);" />
+          <img src="data:${currentData.fotoMimeType};base64,${currentData.fotoBase64}" style="max-width: 120px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border);" />
         </div>
       `;
       document.getElementById("summaryBox").innerHTML = html;
     }
 
     async function submitData() {
-      document.getElementById("loader").style.display = "flex";
+      showLoader("Guardando datos...", "Subiendo foto y registrando sobre");
 
-      const fechaEspigaRaw2 = document.getElementById("fechaEspiga").value;
-      const [anio2, mes2, dia2] = fechaEspigaRaw2.split('-');
-      const fechaEspigaEnvio = `${dia2}/${mes2}/${anio2}`;
+      const minName = document.getElementById("ministerio").value;
+      const pass = MINISTRY_PASSWORDS[minName] || GLOBAL_LEGACY_TOKEN;
+
+      const fechaEspigaRaw = document.getElementById("fechaEspiga").value;
+      let fechaEspigaEnvio = "";
+      if (fechaEspigaRaw) {
+        const [anio, mes, dia] = fechaEspigaRaw.split('-');
+        fechaEspigaEnvio = `${dia}/${mes}/${anio}`;
+      }
 
       const payload = {
-        token: SECURITY_TOKEN,
-        ministerio: document.getElementById("ministerio").value,
+        token: pass,
+        ministerio: minName,
         mentor: document.getElementById("mentor").value,
         lider: document.getElementById("lider").value,
         asistentes: document.getElementById("asistentes").value,
@@ -659,17 +1291,478 @@
         });
 
         const result = await response.json();
-        document.getElementById("loader").style.display = "none";
+        hideLoader();
 
         if (result.success) {
           goToStep(4);
         } else {
-          throw new Error(result.error);
+          throw new Error(result.error || "Error al procesar la solicitud");
         }
       } catch (err) {
-        document.getElementById("loader").style.display = "none";
+        hideLoader();
         alert("Hubo un error al enviar el formulario: " + err.message);
       }
+    }
+
+    function resetForm() {
+      document.getElementById("mentor").value = "";
+      document.getElementById("asistentes").value = "";
+      document.getElementById("ausencias").value = "";
+      document.getElementById("motivo").value = "";
+      document.getElementById("fechaEspiga").value = "";
+      document.getElementById("ofrenda").value = "";
+      currentData = { fotoBase64: null, fotoMimeType: null };
+      
+      document.getElementById("photoOptionsContainer").style.display = "flex";
+      document.getElementById("dropArea").style.display = "none";
+      document.getElementById("imagePreview").src = "";
+      document.getElementById("imagePreview").style.display = "none";
+      
+      goToStep(1);
+    }
+
+    // ==========================================
+    // FUNCIONES DE CONSULTA E HISTORIAL POR MES
+    // ==========================================
+    async function consultarHistorial() {
+      const minSelect = document.getElementById("consMinisterio");
+      const ministerio = minSelect.value;
+      const lider = document.getElementById("consLider").value;
+      const password = document.getElementById("consPassword").value.trim();
+
+      if (!ministerio) {
+        alert("Por favor selecciona un ministerio para consultar.");
+        minSelect.focus();
+        return;
+      }
+
+      if (!password) {
+        alert("Por favor ingresa la clave de acceso del ministerio.");
+        document.getElementById("consPassword").focus();
+        return;
+      }
+
+      showLoader("Consultando Google Sheets...", "Obteniendo sobres registrados en vivo");
+
+      try {
+        const queryUrl = `${SCRIPT_URL}?action=getHistorial&token=${encodeURIComponent(password)}&ministerio=${encodeURIComponent(ministerio)}&lider=TODOS`;
+        const response = await fetch(queryUrl);
+        const responseText = await response.text();
+        
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseErr) {
+          if (responseText.includes("Script Online")) {
+            throw new Error("El Google Apps Script aún tiene la versión anterior instalada en Google Drive.\n\nPor favor pegá el código actualizado en script.google.com y hacé clic en 'Nueva versión' al Implementar.");
+          }
+          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
+        }
+
+        hideLoader();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        esUsuarioMaster = (data.esMaster === true);
+
+        const todosLosRegistros = data.registros || [];
+        cacheMinisterioData[ministerio] = todosLosRegistros;
+
+        // Filtrar por líder si se seleccionó uno específico
+        if (lider && lider.toUpperCase() !== "TODOS" && lider.toUpperCase() !== "ALL") {
+          registrosCargados = todosLosRegistros.filter(r => matchNames(r.lider, lider));
+        } else {
+          registrosCargados = todosLosRegistros;
+        }
+
+        renderizarHistorial(registrosCargados);
+
+      } catch (err) {
+        hideLoader();
+        alert("No se pudo obtener el historial: " + err.message);
+      }
+    }
+
+    function normalizeWords(str) {
+      return (str || "")
+        .toString()
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/g, " ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function matchNames(name1, name2) {
+      if (!name1 || !name2) return false;
+      const w1 = normalizeWords(name1);
+      const w2 = normalizeWords(name2);
+      if (w1.length === 0 || w2.length === 0) return false;
+
+      const sorted1 = [...w1].sort().join(" ");
+      const sorted2 = [...w2].sort().join(" ");
+      if (sorted1 === sorted2) return true;
+
+      const w1InW2 = w1.every(w => w2.includes(w));
+      const w2InW1 = w2.every(w => w1.includes(w));
+      if (w1InW2 || w2InW1) return true;
+
+      const common = w1.filter(w => w2.includes(w));
+      if (common.length >= 2) return true;
+
+      return false;
+    }
+
+    function formatearFechaLegible(fechaStr) {
+      if (!fechaStr || fechaStr === "-" || fechaStr === "Sin fecha") return "Sin fecha";
+      const trimmed = fechaStr.toString().trim();
+      
+      if (["mon", "tue", "wed", "thu", "fri", "sat", "sun"].includes(trimmed.toLowerCase())) {
+        return "Sin fecha";
+      }
+
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(trimmed)) {
+        return trimmed;
+      }
+      const d = new Date(trimmed);
+      if (!isNaN(d.getTime()) && d.getFullYear() > 2000) {
+        const dia = String(d.getDate()).padStart(2, '0');
+        const mes = String(d.getMonth() + 1).padStart(2, '0');
+        const anio = d.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+      }
+      return trimmed;
+    }
+
+    function formatearFechaHoraLegible(fechaHoraStr) {
+      if (!fechaHoraStr || fechaHoraStr === "-") return "-";
+      const trimmed = fechaHoraStr.toString().trim();
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}/.test(trimmed)) {
+        return trimmed;
+      }
+      const d = new Date(trimmed);
+      if (!isNaN(d.getTime()) && d.getFullYear() > 2000) {
+        const dia = String(d.getDate()).padStart(2, '0');
+        const mes = String(d.getMonth() + 1).padStart(2, '0');
+        const anio = d.getFullYear();
+        const horas = String(d.getHours()).padStart(2, '0');
+        const mins = String(d.getMinutes()).padStart(2, '0');
+        return `${dia}/${mes}/${anio} ${horas}:${mins}`;
+      }
+      return trimmed;
+    }
+
+    // Extraer información del Mes y Año en Español para agrupar
+    function extraerMesAnio(r) {
+      // 1. Intentar con fechaEspiga
+      if (r.fechaEspiga && /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(r.fechaEspiga.trim())) {
+        const [dia, mes, anio] = r.fechaEspiga.trim().split('/');
+        const mIndex = parseInt(mes, 10) - 1;
+        const yNum = parseInt(anio, 10);
+        if (mIndex >= 0 && mIndex < 12 && yNum > 2000) {
+          return {
+            key: `${yNum}-${String(mIndex + 1).padStart(2, '0')}`,
+            label: `${MESES_ES[mIndex]} ${yNum}`,
+            sortValue: yNum * 100 + mIndex
+          };
+        }
+      }
+
+      // 2. Intentar con fechaHora
+      if (r.fechaHora) {
+        const match = r.fechaHora.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+        if (match) {
+          const mIndex = parseInt(match[2], 10) - 1;
+          const yNum = parseInt(match[3], 10);
+          if (mIndex >= 0 && mIndex < 12 && yNum > 2000) {
+            return {
+              key: `${yNum}-${String(mIndex + 1).padStart(2, '0')}`,
+              label: `${MESES_ES[mIndex]} ${yNum}`,
+              sortValue: yNum * 100 + mIndex
+            };
+          }
+        }
+        const d = new Date(r.fechaHora);
+        if (!isNaN(d.getTime()) && d.getFullYear() > 2000) {
+          const mIndex = d.getMonth();
+          const yNum = d.getFullYear();
+          return {
+            key: `${yNum}-${String(mIndex + 1).padStart(2, '0')}`,
+            label: `${MESES_ES[mIndex]} ${yNum}`,
+            sortValue: yNum * 100 + mIndex
+          };
+        }
+      }
+
+      return {
+        key: "0000-00",
+        label: "Sobres Anteriores / Sin Mes",
+        sortValue: 0
+      };
+    }
+
+    function agruparPorMeses(registros) {
+      const grupos = {};
+      registros.forEach(r => {
+        const mesInfo = extraerMesAnio(r);
+        if (!grupos[mesInfo.key]) {
+          grupos[mesInfo.key] = {
+            key: mesInfo.key,
+            label: mesInfo.label,
+            sortValue: mesInfo.sortValue,
+            registros: [],
+            totalOfrenda: 0
+          };
+        }
+        grupos[mesInfo.key].registros.push(r);
+        const num = parseFloat((r.ofrenda || "").toString().replace(/[^0-9.-]+/g, ""));
+        if (!isNaN(num)) grupos[mesInfo.key].totalOfrenda += num;
+      });
+
+      // Ordenar de más reciente a más antiguo
+      return Object.values(grupos).sort((a, b) => b.sortValue - a.sortValue);
+    }
+
+    function renderizarHistorial(registros) {
+      const registrosValidos = (registros || []).filter(r => r.lider && r.lider.trim() !== "");
+
+      document.getElementById("consultaEmptyState").style.display = "none";
+      const resultadosDiv = document.getElementById("consultaResultados");
+      resultadosDiv.style.display = "block";
+
+      // 1. Métricas Globales
+      document.getElementById("metricaTotal").innerText = registrosValidos.length;
+
+      let ultimaFecha = "-";
+      let totalOfrenda = 0;
+
+      if (registrosValidos.length > 0) {
+        const primerReg = registrosValidos[0];
+        ultimaFecha = formatearFechaLegible(primerReg.fechaEspiga || primerReg.fechaHora);
+        
+        if (esUsuarioMaster) {
+          registrosValidos.forEach(r => {
+            const num = parseFloat((r.ofrenda || "").toString().replace(/[^0-9.-]+/g, ""));
+            if (!isNaN(num)) totalOfrenda += num;
+          });
+        }
+      }
+
+      document.getElementById("metricaUltimaFecha").innerText = ultimaFecha;
+      
+      const ofrendaCard = document.getElementById("metricaOfrendaCard");
+      if (esUsuarioMaster) {
+        if (ofrendaCard) ofrendaCard.style.display = "block";
+        document.getElementById("metricaOfrendaTotal").innerText = "$" + totalOfrenda.toLocaleString("es-AR");
+      } else {
+        if (ofrendaCard) ofrendaCard.style.display = "none";
+      }
+
+      // 2. Renderizar Grupos por Meses
+      renderizarMesesDesplegables(registrosValidos);
+    }
+
+    function renderizarMesesDesplegables(registros) {
+      const container = document.getElementById("monthsContainer");
+
+      if (!registros || registros.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--primary);">No se encontraron sobres</h3>
+            <p style="font-size: 13px; color: var(--muted); margin-top: 4px;">No hay registros que coincidan con la búsqueda seleccionada.</p>
+          </div>
+        `;
+        document.getElementById("mesesCountText").innerText = "0 meses";
+        return;
+      }
+
+      const gruposMeses = agruparPorMeses(registros);
+      document.getElementById("mesesCountText").innerText = `${gruposMeses.length} ${gruposMeses.length === 1 ? 'mes registrado' : 'meses registrados'}`;
+
+      let html = "";
+      gruposMeses.forEach((grupo, index) => {
+        const isOpen = index === 0; // El mes más reciente abre desplegado por defecto
+        const activeClass = isOpen ? "active" : "";
+
+        let cardsHtml = "";
+        grupo.registros.forEach(r => {
+          const estadoClass = (r.estado || "").toLowerCase().includes("confirm") || (r.estado || "").toLowerCase().includes("recib") || (r.estado || "").toLowerCase().includes("enviad")
+            ? "confirmado" 
+            : "pendiente";
+
+          const fotoBtn = r.fotoUrl && r.fotoUrl.startsWith("http")
+            ? `<button class="btn btn-outline btn-sm" onclick="openPhotoModal('${escapeHTML(r.fotoUrl)}', 'Sobre de ${escapeHTML(r.lider)}')">📷 Ver Foto</button>`
+            : `<span style="font-size: 12px; color: var(--muted);">Sin foto</span>`;
+
+          const fechaEspigaFormateada = formatearFechaLegible(r.fechaEspiga || r.fechaHora);
+          const fechaHoraFormateada = formatearFechaHoraLegible(r.fechaHora);
+
+          const ofrendaCardTag = (esUsuarioMaster && r.ofrenda)
+            ? `<div class="ofrenda-tag">$${escapeHTML(r.ofrenda)}</div>`
+            : "";
+
+          cardsHtml += `
+            <div class="record-card">
+              <div class="record-header">
+                <div class="record-date-badge">
+                  <span>📅</span> <strong>Espiga:</strong> ${escapeHTML(fechaEspigaFormateada)}
+                </div>
+                <span class="status-badge ${estadoClass}">${escapeHTML(r.estado || "PENDIENTE")}</span>
+              </div>
+
+              <div class="record-grid">
+                <div class="record-field">
+                  <div class="field-title">Líder</div>
+                  <div class="field-content">👤 ${escapeHTML(r.lider || "-")}</div>
+                </div>
+                <div class="record-field">
+                  <div class="field-title">Mentor</div>
+                  <div class="field-content">🛡️ ${escapeHTML(r.mentor || "-")}</div>
+                </div>
+                <div class="record-field full-width">
+                  <div class="field-title">Asistentes</div>
+                  <div class="field-content">${formatearNuevos(escapeHTML(r.asistentes || "-"))}</div>
+                </div>
+                <div class="record-field full-width">
+                  <div class="field-title">Ausencias y Motivos</div>
+                  <div class="field-content">${escapeHTML(r.ausencias || "-")}</div>
+                </div>
+                <div class="record-field full-width">
+                  <div class="field-title">Motivo de Oración</div>
+                  <div class="field-content">${escapeHTML(r.motivo || "-")}</div>
+                </div>
+              </div>
+
+              <div class="record-footer">
+                <div style="font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;">
+                  <span>🕒 <strong>Cargado el:</strong> ${escapeHTML(fechaHoraFormateada)}</span>
+                  <span>📅 <strong>Fecha de Espiga:</strong> <strong style="color: #855913; background: #fdf8eb; padding: 2px 7px; border-radius: 6px; border: 1px solid #f3d79b;">${escapeHTML(fechaEspigaFormateada)}</strong></span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  ${ofrendaCardTag}
+                  ${fotoBtn}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        const ofrendaHeaderTag = esUsuarioMaster
+          ? `<span class="month-total-ofrenda">$${grupo.totalOfrenda.toLocaleString("es-AR")}</span>`
+          : "";
+
+        html += `
+          <div class="month-accordion ${activeClass}" id="accordion-${grupo.key}">
+            <button type="button" class="month-header" onclick="toggleMonth('${grupo.key}')">
+              <div class="month-header-info">
+                <span class="month-title"><span>📅</span> ${escapeHTML(grupo.label)}</span>
+                <span class="month-badge">${grupo.registros.length} ${grupo.registros.length === 1 ? 'sobre' : 'sobres'}</span>
+              </div>
+              <div class="month-header-right">
+                ${ofrendaHeaderTag}
+                <span class="month-chevron">▼</span>
+              </div>
+            </button>
+            <div class="month-body">
+              <div class="records-list">
+                ${cardsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function toggleMonth(key) {
+      const el = document.getElementById(`accordion-${key}`);
+      if (el) {
+        el.classList.toggle("active");
+      }
+    }
+
+    function expandirTodosMeses(expand) {
+      document.querySelectorAll(".month-accordion").forEach(acc => {
+        if (expand) acc.classList.add("active");
+        else acc.classList.remove("active");
+      });
+    }
+
+    function formatearNuevos(texto) {
+      if (!texto) return "-";
+      return texto.replace(/(NUEVO|NUEVA)/gi, '<span style="background: #dcfce7; color: #166534; font-weight: 700; padding: 2px 6px; border-radius: 4px; font-size: 11px;">NUEVO</span>');
+    }
+
+    function filtrarResultadosLocales() {
+      const q = document.getElementById("busquedaFiltro").value.toLowerCase().trim();
+      if (!q) {
+        renderizarHistorial(registrosCargados);
+        return;
+      }
+
+      const filtrados = registrosCargados.filter(r => {
+        return (r.lider && r.lider.toLowerCase().includes(q)) ||
+               (r.mentor && r.mentor.toLowerCase().includes(q)) ||
+               (r.fechaEspiga && r.fechaEspiga.toLowerCase().includes(q)) ||
+               (r.fechaHora && r.fechaHora.toLowerCase().includes(q)) ||
+               (r.asistentes && r.asistentes.toLowerCase().includes(q)) ||
+               (r.ausencias && r.ausencias.toLowerCase().includes(q)) ||
+               (r.motivo && r.motivo.toLowerCase().includes(q)) ||
+               (r.estado && r.estado.toLowerCase().includes(q));
+      });
+
+      renderizarHistorial(filtrados);
+    }
+
+    // Modal de Foto
+    function openPhotoModal(url, titulo) {
+      document.getElementById("modalTitle").innerText = titulo || "Foto del Sobre";
+      
+      let previewUrl = url;
+      if (url.includes("drive.google.com")) {
+        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          previewUrl = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+        }
+      }
+
+      document.getElementById("modalImage").src = previewUrl;
+      document.getElementById("modalOpenTab").href = url;
+      document.getElementById("photoModal").style.display = "flex";
+    }
+
+    function closePhotoModal() {
+      document.getElementById("photoModal").style.display = "none";
+      document.getElementById("modalImage").src = "";
+    }
+
+    // Helpers
+    function showLoader(title, sub) {
+      document.getElementById("loaderTitle").innerText = title || "Procesando...";
+      document.getElementById("loaderSub").innerText = sub || "Por favor esperá un momento";
+      document.getElementById("loader").style.display = "flex";
+    }
+
+    function hideLoader() {
+      document.getElementById("loader").style.display = "none";
+    }
+
+    function escapeHTML(str) {
+      if (!str) return "";
+      return str.toString().replace(/[&<>"']/g, function (m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m];
+      });
     }
   </script>
 </body>
