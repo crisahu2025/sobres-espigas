@@ -1261,8 +1261,6 @@
       showLoader("Guardando datos...", "Subiendo foto y registrando sobre");
 
       const minName = document.getElementById("ministerio").value;
-      const pass = MINISTRY_PASSWORDS[minName] || GLOBAL_LEGACY_TOKEN;
-
       const fechaEspigaRaw = document.getElementById("fechaEspiga").value;
       let fechaEspigaEnvio = "";
       if (fechaEspigaRaw) {
@@ -1271,7 +1269,6 @@
       }
 
       const payload = {
-        token: pass,
         ministerio: minName,
         mentor: document.getElementById("mentor").value,
         lider: document.getElementById("lider").value,
