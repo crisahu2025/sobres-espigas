@@ -780,6 +780,94 @@
         transform: rotate(360deg);
       }
     }
+
+    /* ====== ESTILOS DE LA SECCIÓN MOTIVOS DE ORACIÓN ====== */
+    .prayer-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+      border-left: 5px solid #d97706;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .prayer-card:hover {
+      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .prayer-quote-box {
+      background: #fdfaf3;
+      border: 1px solid #f9ebcc;
+      border-radius: 12px;
+      padding: 14px 16px;
+      position: relative;
+    }
+
+    .prayer-quote-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1d1a18;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .prayer-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .prayer-meta-item {
+      background: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #edf2f7;
+    }
+
+    .prayer-ministry-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1d1a18;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .btn-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: #f8fafc;
+      border-color: var(--primary);
+    }
+
+    .btn-copy.copied {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
   </style>
 </head>
 
@@ -812,7 +900,7 @@
       <p>Iglesia Gran Rey • Sistema de Sobres Ministeriales</p>
     </div>
 
-    <!-- Navegación entre Cargar y Consultar -->
+    <!-- Navegación entre Cargar, Consultar y Motivos de Oración -->
     <div class="tab-nav-wrapper">
       <div class="tab-nav">
         <button class="tab-btn active" id="tabCargarBtn" onclick="switchAppTab('cargar')">
@@ -820,6 +908,9 @@
         </button>
         <button class="tab-btn" id="tabConsultarBtn" onclick="switchAppTab('consultar')">
           <span>🔍</span> Consultar Historial
+        </button>
+        <button class="tab-btn" id="tabOracionBtn" onclick="switchAppTab('oracion')">
+          <span>🙏</span> Motivos de Oración
         </button>
       </div>
     </div>
@@ -1047,11 +1138,89 @@
       </div>
     </div>
 
+    <!-- ========================================================= -->
+    <!-- SECCIÓN 3: MOTIVOS DE ORACIÓN (INTERCESIÓN)               -->
+    <!-- ========================================================= -->
+    <div class="app-section" id="section-oracion">
+      <div class="main-card">
+        <div class="card-body">
+          <h2 class="step-title">🙏 Motivos de Oración e Intercesión</h2>
+          <p style="color: var(--muted); margin-bottom: 24px;">Consulta todas las peticiones y motivos de oración presentados en las espigas de todos los ministerios.</p>
+
+          <!-- Formulario de Autenticación de Oración -->
+          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Filtrar por Ministerio</label>
+                <select class="form-select" id="oraMinisterio" onchange="filtrarMotivosLocales()">
+                  <option value="TODOS">🌐 Todos los ministerios</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Clave de Acceso a Oración</label>
+                <div class="input-with-icon">
+                  <input type="password" class="form-input" id="oraPassword" placeholder="Ingresá la clave de oración..." />
+                  <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('oraPassword')">👁️</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+              <button class="btn btn-primary" onclick="consultarMotivosOracion()">
+                <span>🙏</span> Ver Motivos de Oración
+              </button>
+            </div>
+          </div>
+
+          <!-- Resultados de Oración -->
+          <div id="oracionResultados" style="display: none;">
+            <!-- Métricas Resumen -->
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <div class="metric-number" id="metricaOraTotal">0</div>
+                <div class="metric-label">Peticiones de Oración</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-number" id="metricaOraMinisterios">0</div>
+                <div class="metric-label">Ministerios Activos</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-number" style="font-size: 20px;" id="metricaOraUltimaFecha">-</div>
+                <div class="metric-label">Última Espiga</div>
+              </div>
+            </div>
+
+            <!-- Buscador Rápido interno -->
+            <div class="search-filter-bar">
+              <input type="text" class="form-input" id="busquedaOracion" placeholder="🔍 Buscar por persona, necesidad, motivo, líder, ministerio..." onkeyup="filtrarMotivosLocales()" />
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 13px; font-weight: 600; color: var(--muted);" id="oracionCountText">Peticiones cargadas</span>
+              <button type="button" class="btn btn-outline btn-sm" onclick="consultarMotivosOracion()">🔄 Actualizar lista</button>
+            </div>
+
+            <!-- Contenedor de Tarjetas de Oración -->
+            <div style="display: flex; flex-direction: column; gap: 16px;" id="oracionCardsContainer"></div>
+          </div>
+
+          <!-- Estado Vacío Inicial -->
+          <div class="empty-state" id="oracionEmptyState">
+            <div class="empty-state-icon">🕊️</div>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Área de Intercesión y Oración</h3>
+            <p style="font-size: 13px; color: var(--muted);">Ingresá la clave correspondiente para visualizar el listado completo de necesidades y motivos de oración de las espigas.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
     // ===== URL DE CONEXIÓN CON GOOGLE APPS SCRIPT =====
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0iLkZa-R4_R7sTxBV3tIlau6kCFnwdbVJu240VSehOMsgbsaXfOJbya6JOq2_Xp-F/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAn_DPoiEbh9EJYOBZa3ctidDY-f79MTTqv3_gxWwFjx-_Xhw2OaPXkhe0wmB_kUFl/exec";
 
     const MESES_ES = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -1062,6 +1231,7 @@
     let ministeriosData = [];
     let currentData = { fotoBase64: null, fotoMimeType: null };
     let registrosCargados = [];
+    let todosLosMotivosOracion = [];
     let cacheMinisterioData = {};
     let esUsuarioMaster = false;
 
@@ -1070,7 +1240,7 @@
       await cargarMinisterios();
     };
 
-    // Alternar entre pestañas "Cargar Sobre" y "Consultar Historial"
+    // Alternar entre pestañas "Cargar Sobre", "Consultar Historial" y "Motivos de Oración"
     function switchAppTab(tab) {
       document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
       document.querySelectorAll(".app-section").forEach(sec => sec.classList.remove("active"));
@@ -1078,9 +1248,12 @@
       if (tab === 'cargar') {
         document.getElementById("tabCargarBtn").classList.add("active");
         document.getElementById("section-cargar").classList.add("active");
-      } else {
+      } else if (tab === 'consultar') {
         document.getElementById("tabConsultarBtn").classList.add("active");
         document.getElementById("section-consultar").classList.add("active");
+      } else if (tab === 'oracion') {
+        document.getElementById("tabOracionBtn").classList.add("active");
+        document.getElementById("section-oracion").classList.add("active");
       }
       window.scrollTo(0, 0);
     }
@@ -1103,9 +1276,18 @@
           const consMinSelect = document.getElementById("consMinisterio");
           consMinSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
 
+          // Poblar selector de oración
+          const oraMinSelect = document.getElementById("oraMinisterio");
+          if (oraMinSelect) {
+            oraMinSelect.innerHTML = '<option value="TODOS">🌐 Todos los ministerios</option>';
+          }
+
           ministeriosData.forEach(m => {
             minSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
             consMinSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
+            if (oraMinSelect) {
+              oraMinSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
+            }
           });
         }
       } catch (err) {
@@ -1591,15 +1773,24 @@
             ? "confirmado" 
             : "pendiente";
 
-          const fotoBtn = r.fotoUrl && r.fotoUrl.startsWith("http")
+          const fotoBtn = (esUsuarioMaster && r.fotoUrl && r.fotoUrl.startsWith("http"))
             ? `<button class="btn btn-outline btn-sm" onclick="openPhotoModal('${escapeHTML(r.fotoUrl)}', 'Sobre de ${escapeHTML(r.lider)}')">📷 Ver Foto</button>`
-            : `<span style="font-size: 12px; color: var(--muted);">Sin foto</span>`;
+            : "";
 
           const fechaEspigaFormateada = formatearFechaLegible(r.fechaEspiga || r.fechaHora);
           const fechaHoraFormateada = formatearFechaHoraLegible(r.fechaHora);
 
           const ofrendaCardTag = (esUsuarioMaster && r.ofrenda)
             ? `<div class="ofrenda-tag">$${escapeHTML(r.ofrenda)}</div>`
+            : "";
+
+          const motivoField = (esUsuarioMaster && r.motivo && r.motivo.trim() !== "")
+            ? `
+                <div class="record-field full-width">
+                  <div class="field-title">Motivo de Oración</div>
+                  <div class="field-content">${escapeHTML(r.motivo)}</div>
+                </div>
+              `
             : "";
 
           cardsHtml += `
@@ -1628,10 +1819,7 @@
                   <div class="field-title">Ausencias y Motivos</div>
                   <div class="field-content">${escapeHTML(r.ausencias || "-")}</div>
                 </div>
-                <div class="record-field full-width">
-                  <div class="field-title">Motivo de Oración</div>
-                  <div class="field-content">${escapeHTML(r.motivo || "-")}</div>
-                </div>
+                ${motivoField}
               </div>
 
               <div class="record-footer">
@@ -1736,6 +1924,189 @@
     function closePhotoModal() {
       document.getElementById("photoModal").style.display = "none";
       document.getElementById("modalImage").src = "";
+    }
+
+    // ==========================================
+    // FUNCIONES DE MOTIVOS DE ORACIÓN / INTERCESIÓN
+    // ==========================================
+    async function consultarMotivosOracion() {
+      const password = document.getElementById("oraPassword").value.trim();
+
+      if (!password) {
+        alert("Por favor ingresá la clave de acceso para ver los motivos de oración.");
+        document.getElementById("oraPassword").focus();
+        return;
+      }
+
+      showLoader("Consultando Motivos de Oración...", "Recopilando peticiones de todas las espigas");
+
+      try {
+        const queryUrl = `${SCRIPT_URL}?action=getMotivosOracion&token=${encodeURIComponent(password)}`;
+        const response = await fetch(queryUrl);
+        const responseText = await response.text();
+
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseErr) {
+          if (responseText.includes("Script Online")) {
+            throw new Error("El Google Apps Script aún no tiene implementado el endpoint de oración.\n\nPor favor pegá el código actualizado en script.google.com y hacé clic en 'Nueva versión' al Implementar.");
+          }
+          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
+        }
+
+        hideLoader();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        todosLosMotivosOracion = data.peticiones || [];
+        filtrarMotivosLocales();
+
+      } catch (err) {
+        hideLoader();
+        alert("No se pudieron obtener los motivos de oración: " + err.message);
+      }
+    }
+
+    function filtrarMotivosLocales() {
+      const minSelect = document.getElementById("oraMinisterio");
+      const minSeleccionado = minSelect ? minSelect.value : "TODOS";
+      const busqueda = (document.getElementById("busquedaOracion") ? document.getElementById("busquedaOracion").value : "").toLowerCase().trim();
+
+      let filtrados = todosLosMotivosOracion;
+
+      if (minSeleccionado && minSeleccionado !== "TODOS") {
+        filtrados = filtrados.filter(p => p.ministerio === minSeleccionado);
+      }
+
+      if (busqueda) {
+        filtrados = filtrados.filter(p => {
+          return (p.motivo && p.motivo.toLowerCase().includes(busqueda)) ||
+                 (p.lider && p.lider.toLowerCase().includes(busqueda)) ||
+                 (p.mentor && p.mentor.toLowerCase().includes(busqueda)) ||
+                 (p.ministerio && p.ministerio.toLowerCase().includes(busqueda)) ||
+                 (p.asistentes && p.asistentes.toLowerCase().includes(busqueda)) ||
+                 (p.fechaEspiga && p.fechaEspiga.toLowerCase().includes(busqueda));
+        });
+      }
+
+      renderizarMotivosOracion(filtrados);
+    }
+
+    function renderizarMotivosOracion(peticiones) {
+      document.getElementById("oracionEmptyState").style.display = "none";
+      document.getElementById("oracionResultados").style.display = "block";
+
+      const lista = peticiones || [];
+      document.getElementById("metricaOraTotal").innerText = lista.length;
+
+      // Cantidad de ministerios únicos con peticiones
+      const minsUnicos = new Set(lista.map(p => p.ministerio).filter(Boolean));
+      document.getElementById("metricaOraMinisterios").innerText = minsUnicos.size;
+
+      // Última fecha
+      let ultimaFecha = "-";
+      if (lista.length > 0) {
+        ultimaFecha = formatearFechaLegible(lista[0].fechaEspiga || lista[0].fechaHora);
+      }
+      document.getElementById("metricaOraUltimaFecha").innerText = ultimaFecha;
+
+      document.getElementById("oracionCountText").innerText = `${lista.length} ${lista.length === 1 ? 'petición encontrada' : 'peticiones encontradas'}`;
+
+      const container = document.getElementById("oracionCardsContainer");
+
+      if (lista.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--primary);">No se encontraron motivos de oración</h3>
+            <p style="font-size: 13px; color: var(--muted); margin-top: 4px;">No hay peticiones que coincidan con la búsqueda seleccionada.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      lista.forEach((p, idx) => {
+        const fechaEspigaFormateada = formatearFechaLegible(p.fechaEspiga || p.fechaHora);
+        const fechaHoraFormateada = formatearFechaHoraLegible(p.fechaHora);
+        const idBtn = `btnCopyOra_${idx}`;
+
+        html += `
+          <div class="prayer-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span class="prayer-ministry-badge">🏛️ ${escapeHTML(p.ministerio)}</span>
+                <span class="record-date-badge"><span>📅</span> <strong>Espiga:</strong> ${escapeHTML(fechaEspigaFormateada)}</span>
+              </div>
+              <button id="${idBtn}" class="btn-copy" onclick="copiarMotivo('${escapeJSString(p.motivo)}', '${idBtn}')">
+                📋 Copiar motivo
+              </button>
+            </div>
+
+            <div class="prayer-quote-box">
+              <div style="font-size: 11px; color: #b45309; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                🙏 Motivo de Oración / Petición
+              </div>
+              <div class="prayer-quote-text">${escapeHTML(p.motivo)}</div>
+            </div>
+
+            <div class="prayer-meta-grid">
+              <div class="prayer-meta-item">
+                <div class="field-title">Líder</div>
+                <div class="field-content">👤 ${escapeHTML(p.lider || "-")}</div>
+              </div>
+              <div class="prayer-meta-item">
+                <div class="field-title">Mentor</div>
+                <div class="field-content">🛡️ ${escapeHTML(p.mentor || "-")}</div>
+              </div>
+              ${p.asistentes ? `
+              <div class="prayer-meta-item" style="grid-column: 1 / -1;">
+                <div class="field-title">Asistentes en la Espiga</div>
+                <div class="field-content" style="font-size: 12px;">${escapeHTML(p.asistentes)}</div>
+              </div>
+              ` : ""}
+            </div>
+
+            <div style="font-size: 12px; color: var(--muted); padding-top: 6px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+              <span>🕒 Registrado el: ${escapeHTML(fechaHoraFormateada)}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function escapeJSString(str) {
+      if (!str) return "";
+      return str.toString()
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "");
+    }
+
+    function copiarMotivo(texto, botonId) {
+      if (!texto) return;
+      navigator.clipboard.writeText(texto).then(() => {
+        const btn = document.getElementById(botonId);
+        if (btn) {
+          const originalHtml = btn.innerHTML;
+          btn.innerHTML = "✅ ¡Copiado!";
+          btn.classList.add("copied");
+          setTimeout(() => {
+            btn.innerHTML = originalHtml;
+            btn.classList.remove("copied");
+          }, 2000);
+        }
+      }).catch(err => {
+        console.error("Error al copiar:", err);
+        alert("No se pudo copiar automáticamente: " + texto);
+      });
     }
 
     // Helpers
