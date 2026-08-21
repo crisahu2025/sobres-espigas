@@ -1196,13 +1196,18 @@
               <input type="text" class="form-input" id="busquedaOracion" placeholder="🔍 Buscar por persona, necesidad, motivo, líder, ministerio..." onkeyup="filtrarMotivosLocales()" />
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-              <span style="font-size: 13px; font-weight: 600; color: var(--muted);" id="oracionCountText">Peticiones cargadas</span>
-              <button type="button" class="btn btn-outline btn-sm" onclick="consultarMotivosOracion()">🔄 Actualizar lista</button>
+            <!-- Controles de Acordeón de Oración -->
+            <div class="accordion-controls">
+              <span style="font-size: 13px; font-weight: 600; color: var(--muted);" id="oracionCountText">Meses registrados</span>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="expandirTodosMesesOracion(true)">📂 Abrir todos</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="expandirTodosMesesOracion(false)">📁 Cerrar todos</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="consultarMotivosOracion()">🔄 Actualizar</button>
+              </div>
             </div>
 
-            <!-- Contenedor de Tarjetas de Oración -->
-            <div style="display: flex; flex-direction: column; gap: 16px;" id="oracionCardsContainer"></div>
+            <!-- Contenedor Desplegable por Meses de Oración -->
+            <div class="months-container" id="oracionMonthsContainer"></div>
           </div>
 
           <!-- Estado Vacío Inicial -->
@@ -1995,6 +2000,58 @@
       renderizarMotivosOracion(filtrados);
     }
 
+    // Extraer información del Mes y Año para agrupar motivos de oración
+    function extraerMesAnioPeticion(p) {
+      const str = p.fechaHora || p.fechaEspiga || "";
+      const match = str.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (match) {
+        const mIndex = parseInt(match[2], 10) - 1;
+        const yNum = parseInt(match[3], 10);
+        if (mIndex >= 0 && mIndex < 12 && yNum > 2000) {
+          return {
+            key: `${yNum}-${String(mIndex + 1).padStart(2, '0')}`,
+            label: `${MESES_ES[mIndex]} ${yNum}`,
+            sortValue: yNum * 100 + mIndex
+          };
+        }
+      }
+
+      const d = new Date(str);
+      if (!isNaN(d.getTime()) && d.getFullYear() > 2000) {
+        const mIndex = d.getMonth();
+        const yNum = d.getFullYear();
+        return {
+          key: `${yNum}-${String(mIndex + 1).padStart(2, '0')}`,
+          label: `${MESES_ES[mIndex]} ${yNum}`,
+          sortValue: yNum * 100 + mIndex
+        };
+      }
+
+      return {
+        key: "0000-00",
+        label: "Otras Peticiones / Sin Fecha",
+        sortValue: 0
+      };
+    }
+
+    function agruparPeticionesPorMeses(peticiones) {
+      const grupos = {};
+      peticiones.forEach(p => {
+        const mesInfo = extraerMesAnioPeticion(p);
+        if (!grupos[mesInfo.key]) {
+          grupos[mesInfo.key] = {
+            key: mesInfo.key,
+            label: mesInfo.label,
+            sortValue: mesInfo.sortValue,
+            peticiones: []
+          };
+        }
+        grupos[mesInfo.key].peticiones.push(p);
+      });
+
+      return Object.values(grupos).sort((a, b) => b.sortValue - a.sortValue);
+    }
+
     function renderizarMotivosOracion(peticiones) {
       document.getElementById("oracionEmptyState").style.display = "none";
       document.getElementById("oracionResultados").style.display = "block";
@@ -2013,9 +2070,7 @@
       }
       document.getElementById("metricaOraUltimaFecha").innerText = ultimaFecha;
 
-      document.getElementById("oracionCountText").innerText = `${lista.length} ${lista.length === 1 ? 'petición encontrada' : 'peticiones encontradas'}`;
-
-      const container = document.getElementById("oracionCardsContainer");
+      const container = document.getElementById("oracionMonthsContainer");
 
       if (lista.length === 0) {
         container.innerHTML = `
@@ -2025,59 +2080,95 @@
             <p style="font-size: 13px; color: var(--muted); margin-top: 4px;">No hay peticiones que coincidan con la búsqueda seleccionada.</p>
           </div>
         `;
+        document.getElementById("oracionCountText").innerText = "0 meses";
         return;
       }
 
+      const gruposMeses = agruparPeticionesPorMeses(lista);
+      document.getElementById("oracionCountText").innerText = `${gruposMeses.length} ${gruposMeses.length === 1 ? 'mes registrado' : 'meses registrados'} (${lista.length} ${lista.length === 1 ? 'petición' : 'peticiones'})`;
+
       let html = "";
-      lista.forEach((p, idx) => {
-        const fechaEspigaFormateada = formatearFechaLegible(p.fechaEspiga || p.fechaHora);
-        const fechaHoraFormateada = formatearFechaHoraLegible(p.fechaHora);
-        const idBtn = `btnCopyOra_${idx}`;
+      let globalIdx = 0;
+
+      gruposMeses.forEach((grupo, index) => {
+        const isOpen = index === 0; // El mes más reciente abre desplegado por defecto
+        const activeClass = isOpen ? "active" : "";
+
+        let cardsHtml = "";
+        grupo.peticiones.forEach(p => {
+          globalIdx++;
+          const fechaFormateada = formatearFechaLegible(p.fechaHora || p.fechaEspiga);
+          const fechaHoraFormateada = formatearFechaHoraLegible(p.fechaHora);
+          const idBtn = `btnCopyOra_${globalIdx}`;
+
+          cardsHtml += `
+            <div class="prayer-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="prayer-ministry-badge">🏛️ ${escapeHTML(p.ministerio)}</span>
+                  <span class="record-date-badge"><span>📅</span> ${escapeHTML(fechaFormateada)}</span>
+                </div>
+                <button id="${idBtn}" class="btn-copy" onclick="copiarMotivo('${escapeJSString(p.motivo)}', '${idBtn}')">
+                  📋 Copiar motivo
+                </button>
+              </div>
+
+              <div class="prayer-quote-box">
+                <div style="font-size: 11px; color: #b45309; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                  🙏 Motivo de Oración / Petición
+                </div>
+                <div class="prayer-quote-text">${escapeHTML(p.motivo)}</div>
+              </div>
+
+              <div class="prayer-meta-grid">
+                <div class="prayer-meta-item">
+                  <div class="field-title">Cargado por / Líder</div>
+                  <div class="field-content">👤 ${escapeHTML(p.usuario || p.lider || "-")}</div>
+                </div>
+                <div class="prayer-meta-item">
+                  <div class="field-title">Fecha y Hora de Registro</div>
+                  <div class="field-content">🕒 ${escapeHTML(fechaHoraFormateada)}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
 
         html += `
-          <div class="prayer-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <span class="prayer-ministry-badge">🏛️ ${escapeHTML(p.ministerio)}</span>
-                <span class="record-date-badge"><span>📅</span> <strong>Espiga:</strong> ${escapeHTML(fechaEspigaFormateada)}</span>
+          <div class="month-accordion ${activeClass}" id="accordion-ora-${grupo.key}">
+            <button type="button" class="month-header" onclick="toggleMonthOracion('${grupo.key}')">
+              <div class="month-header-info">
+                <span class="month-title"><span>📅</span> ${escapeHTML(grupo.label)}</span>
+                <span class="month-badge">${grupo.peticiones.length} ${grupo.peticiones.length === 1 ? 'petición' : 'peticiones'}</span>
               </div>
-              <button id="${idBtn}" class="btn-copy" onclick="copiarMotivo('${escapeJSString(p.motivo)}', '${idBtn}')">
-                📋 Copiar motivo
-              </button>
-            </div>
-
-            <div class="prayer-quote-box">
-              <div style="font-size: 11px; color: #b45309; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
-                🙏 Motivo de Oración / Petición
+              <div class="month-header-right">
+                <span class="month-chevron">▼</span>
               </div>
-              <div class="prayer-quote-text">${escapeHTML(p.motivo)}</div>
-            </div>
-
-            <div class="prayer-meta-grid">
-              <div class="prayer-meta-item">
-                <div class="field-title">Líder</div>
-                <div class="field-content">👤 ${escapeHTML(p.lider || "-")}</div>
+            </button>
+            <div class="month-body">
+              <div class="records-list">
+                ${cardsHtml}
               </div>
-              <div class="prayer-meta-item">
-                <div class="field-title">Mentor</div>
-                <div class="field-content">🛡️ ${escapeHTML(p.mentor || "-")}</div>
-              </div>
-              ${p.asistentes ? `
-              <div class="prayer-meta-item" style="grid-column: 1 / -1;">
-                <div class="field-title">Asistentes en la Espiga</div>
-                <div class="field-content" style="font-size: 12px;">${escapeHTML(p.asistentes)}</div>
-              </div>
-              ` : ""}
-            </div>
-
-            <div style="font-size: 12px; color: var(--muted); padding-top: 6px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
-              <span>🕒 Registrado el: ${escapeHTML(fechaHoraFormateada)}</span>
             </div>
           </div>
         `;
       });
 
       container.innerHTML = html;
+    }
+
+    function toggleMonthOracion(key) {
+      const el = document.getElementById(`accordion-ora-${key}`);
+      if (el) {
+        el.classList.toggle("active");
+      }
+    }
+
+    function expandirTodosMesesOracion(expand) {
+      document.querySelectorAll("#oracionMonthsContainer .month-accordion").forEach(acc => {
+        if (expand) acc.classList.add("active");
+        else acc.classList.remove("active");
+      });
     }
 
     function escapeJSString(str) {
