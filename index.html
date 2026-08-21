@@ -2122,13 +2122,24 @@
 
               <div class="prayer-meta-grid">
                 <div class="prayer-meta-item">
-                  <div class="field-title">Cargado por / Líder</div>
-                  <div class="field-content">👤 ${escapeHTML(p.usuario || p.lider || "-")}</div>
+                  <div class="field-title">Líder</div>
+                  <div class="field-content">👤 ${escapeHTML(p.lider || "-")}</div>
                 </div>
                 <div class="prayer-meta-item">
-                  <div class="field-title">Fecha y Hora de Registro</div>
-                  <div class="field-content">🕒 ${escapeHTML(fechaHoraFormateada)}</div>
+                  <div class="field-title">Mentor</div>
+                  <div class="field-content">🛡️ ${escapeHTML(p.mentor || "-")}</div>
                 </div>
+                ${p.asistentes ? `
+                <div class="prayer-meta-item" style="grid-column: 1 / -1;">
+                  <div class="field-title">Asistentes en la Espiga</div>
+                  <div class="field-content" style="font-size: 12px;">${escapeHTML(p.asistentes)}</div>
+                </div>
+                ` : ""}
+              </div>
+
+              <div style="font-size: 12px; color: var(--muted); padding-top: 6px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                <span>🕒 Registrado el: ${escapeHTML(fechaHoraFormateada)}</span>
+                ${p.fechaEspiga && p.fechaEspiga !== "Sin fecha" ? `<span>📅 Espiga: <strong>${escapeHTML(p.fechaEspiga)}</strong></span>` : ""}
               </div>
             </div>
           `;
