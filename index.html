@@ -868,6 +868,191 @@
       color: #166534;
       border-color: #86efac;
     }
+
+    /* ====== ESTILOS DE LOGIN Y SESIÓN ACTIVA ====== */
+    .login-gate-card {
+      max-width: 480px;
+      margin: 20px auto 10px;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 24px;
+      padding: 36px 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @media (min-width: 600px) {
+      .login-gate-card {
+        padding: 44px 38px;
+      }
+    }
+
+    .login-icon-badge {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: #fdf8eb;
+      border: 2px solid #f3d79b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--primary);
+    }
+
+    .login-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .login-form {
+      text-align: left;
+    }
+
+    .remember-me-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 22px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 13.5px;
+      color: #3b3530;
+      font-weight: 500;
+    }
+
+    .remember-me-container input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .login-error-alert {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      animation: fadeIn 0.2s ease;
+      text-align: left;
+    }
+
+    /* ====== BARRA DE SESIÓN ACTIVA ====== */
+    .session-bar {
+      background: #fdf8eb;
+      border: 1.5px solid #f3d79b;
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(222, 188, 116, 0.15);
+    }
+
+    .session-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .session-status-dot {
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+      display: inline-block;
+    }
+
+    .session-badge {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .session-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid #fca5a5;
+      background: #ffffff;
+      color: #dc2626;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-sans);
+    }
+
+    .btn-logout:hover {
+      background: #fee2e2;
+      border-color: #ef4444;
+    }
+
+    .btn-refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-sans);
+    }
+
+    .btn-refresh:hover {
+      background: #f8fafc;
+      border-color: var(--primary);
+    }
+
+    .dashboard-filter-bar {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      align-items: center;
+    }
   </style>
 </head>
 
@@ -1055,44 +1240,79 @@
     <div class="app-section" id="section-consultar">
       <div class="main-card">
         <div class="card-body">
-          <h2 class="step-title">🔍 Consulta de Sobres por Ministerio</h2>
-          <p style="color: var(--muted); margin-bottom: 24px;">Seleccioná tu ministerio, líder y clave de acceso para revisar las semanas cargadas en vivo.</p>
 
-          <!-- Formulario de Búsqueda y Autenticación -->
-          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 24px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Ministerio</label>
-                <select class="form-select" id="consMinisterio" onchange="onMinisterioChange()">
+          <!-- GATE DE LOGIN DE HISTORIAL -->
+          <div id="historialLoginGate" class="login-gate-card">
+            <div class="login-icon-badge">🔐</div>
+            <h2 class="login-title">Consulta de Sobres</h2>
+            <p class="login-subtitle">Ingresá con las credenciales de tu ministerio o administración para consultar los registros en vivo.</p>
+
+            <div class="login-error-alert" id="historialLoginError"></div>
+
+            <form class="login-form" onsubmit="event.preventDefault(); iniciarSesionHistorial();">
+              <div class="form-group">
+                <label class="form-label" for="loginHistorialMinisterio">Ministerio</label>
+                <select class="form-select" id="loginHistorialMinisterio" required>
                   <option value="">Selecciona tu ministerio...</option>
                 </select>
               </div>
 
+              <div class="form-group">
+                <label class="form-label" for="loginHistorialPass">Clave de Acceso</label>
+                <div class="input-with-icon">
+                  <input type="password" class="form-input" id="loginHistorialPass" placeholder="Ingresá la clave de acceso..." required />
+                  <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginHistorialPass')">👁️</button>
+                </div>
+              </div>
+
+              <label class="remember-me-container">
+                <input type="checkbox" id="rememberHistorial" checked />
+                <span>Mantener sesión iniciada en este dispositivo</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmitLoginHistorial" style="width: 100%;">
+                <span>🚀</span> Iniciar Sesión
+              </button>
+            </form>
+          </div>
+
+          <!-- DASHBOARD AUTENTICADO DE HISTORIAL -->
+          <div id="historialDashboard" style="display: none;">
+            
+            <!-- Barra de Sesión Activa -->
+            <div class="session-bar">
+              <div class="session-info">
+                <span class="session-status-dot"></span>
+                <span class="session-badge" id="sessionHistorialBadge">🏛️ Ministerio</span>
+              </div>
+              <div class="session-actions">
+                <button type="button" class="btn-refresh" onclick="recargarHistorialActual()">
+                  <span>🔄</span> Actualizar
+                </button>
+                <button type="button" class="btn-logout" onclick="cerrarSesionHistorial()">
+                  <span>🚪</span> Cerrar Sesión
+                </button>
+              </div>
+            </div>
+
+            <!-- Barra de Filtros Rápidos -->
+            <div class="dashboard-filter-bar">
+              <!-- Selector de Ministerio solo para Administrador General (Master) -->
+              <div class="form-group" id="containerMasterMinisterioSwitch" style="margin-bottom: 0; display: none;">
+                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">👑 Cambiar Ministerio (Admin)</label>
+                <select class="form-select" id="consMasterMinisterio" onchange="onMasterMinisterioChange()">
+                </select>
+              </div>
+
+              <!-- Selector de Líder -->
               <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Líder</label>
+                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Filtrar por Líder</label>
                 <select class="form-select" id="consLider" onchange="onLiderChange()">
                   <option value="TODOS">👥 Todos los líderes</option>
                 </select>
               </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Clave del Ministerio</label>
-                <div class="input-with-icon">
-                  <input type="password" class="form-input" id="consPassword" placeholder="Clave de acceso..." />
-                  <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('consPassword')">👁️</button>
-                </div>
-              </div>
             </div>
 
-            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
-              <button class="btn btn-primary" onclick="consultarHistorial()">
-                <span>🔍</span> Consultar Sobres
-              </button>
-            </div>
-          </div>
-
-          <!-- Resultados de Consulta -->
-          <div id="consultaResultados" style="display: none;">
             <!-- Métricas Resumen -->
             <div class="metrics-grid">
               <div class="metric-card">
@@ -1127,13 +1347,6 @@
             <div class="months-container" id="monthsContainer"></div>
           </div>
 
-          <!-- Estado Vacío Inicial -->
-          <div class="empty-state" id="consultaEmptyState">
-            <div class="empty-state-icon">📋</div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Consultá el estado de tus sobres</h3>
-            <p style="font-size: 13px; color: var(--muted);">Elegí tu ministerio y clave para ver los sobres organizados por mes en tiempo real.</p>
-          </div>
-
         </div>
       </div>
     </div>
@@ -1144,37 +1357,64 @@
     <div class="app-section" id="section-oracion">
       <div class="main-card">
         <div class="card-body">
-          <h2 class="step-title">🙏 Motivos de Oración e Intercesión</h2>
-          <p style="color: var(--muted); margin-bottom: 24px;">Consulta todas las peticiones y motivos de oración presentados en las espigas de todos los ministerios.</p>
 
-          <!-- Formulario de Autenticación de Oración -->
-          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 24px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+          <!-- GATE DE LOGIN DE ORACIÓN -->
+          <div id="oracionLoginGate" class="login-gate-card">
+            <div class="login-icon-badge">🕊️</div>
+            <h2 class="login-title">Área de Intercesión</h2>
+            <p class="login-subtitle">Ingresá la clave de intercesión o clave de administración para acceder al listado de peticiones de oración.</p>
+
+            <div class="login-error-alert" id="oracionLoginError"></div>
+
+            <form class="login-form" onsubmit="event.preventDefault(); iniciarSesionOracion();">
+              <div class="form-group">
+                <label class="form-label" for="loginOracionPass">Clave de Acceso a Oración</label>
+                <div class="input-with-icon">
+                  <input type="password" class="form-input" id="loginOracionPass" placeholder="Ingresá la clave de oración..." required />
+                  <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginOracionPass')">👁️</button>
+                </div>
+              </div>
+
+              <label class="remember-me-container">
+                <input type="checkbox" id="rememberOracion" checked />
+                <span>Mantener sesión iniciada en este dispositivo</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmitLoginOracion" style="width: 100%;">
+                <span>🙏</span> Ingresar a Intercesión
+              </button>
+            </form>
+          </div>
+
+          <!-- DASHBOARD AUTENTICADO DE ORACIÓN -->
+          <div id="oracionDashboard" style="display: none;">
+            
+            <!-- Barra de Sesión Activa -->
+            <div class="session-bar">
+              <div class="session-info">
+                <span class="session-status-dot"></span>
+                <span class="session-badge">🕊️ Panel de Intercesión</span>
+              </div>
+              <div class="session-actions">
+                <button type="button" class="btn-refresh" onclick="recargarOracionActual()">
+                  <span>🔄</span> Actualizar
+                </button>
+                <button type="button" class="btn-logout" onclick="cerrarSesionOracion()">
+                  <span>🚪</span> Cerrar Sesión
+                </button>
+              </div>
+            </div>
+
+            <!-- Filtro por Ministerio -->
+            <div class="dashboard-filter-bar">
               <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Filtrar por Ministerio</label>
+                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Filtrar por Ministerio</label>
                 <select class="form-select" id="oraMinisterio" onchange="filtrarMotivosLocales()">
                   <option value="TODOS">🌐 Todos los ministerios</option>
                 </select>
               </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Clave de Acceso a Oración</label>
-                <div class="input-with-icon">
-                  <input type="password" class="form-input" id="oraPassword" placeholder="Ingresá la clave de oración..." />
-                  <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('oraPassword')">👁️</button>
-                </div>
-              </div>
             </div>
 
-            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
-              <button class="btn btn-primary" onclick="consultarMotivosOracion()">
-                <span>🙏</span> Ver Motivos de Oración
-              </button>
-            </div>
-          </div>
-
-          <!-- Resultados de Oración -->
-          <div id="oracionResultados" style="display: none;">
             <!-- Métricas Resumen -->
             <div class="metrics-grid">
               <div class="metric-card">
@@ -1202,19 +1442,11 @@
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <button type="button" class="btn btn-outline btn-sm" onclick="expandirTodosMesesOracion(true)">📂 Abrir todos</button>
                 <button type="button" class="btn btn-outline btn-sm" onclick="expandirTodosMesesOracion(false)">📁 Cerrar todos</button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="consultarMotivosOracion()">🔄 Actualizar</button>
               </div>
             </div>
 
             <!-- Contenedor Desplegable por Meses de Oración -->
             <div class="months-container" id="oracionMonthsContainer"></div>
-          </div>
-
-          <!-- Estado Vacío Inicial -->
-          <div class="empty-state" id="oracionEmptyState">
-            <div class="empty-state-icon">🕊️</div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Área de Intercesión y Oración</h3>
-            <p style="font-size: 13px; color: var(--muted);">Ingresá la clave correspondiente para visualizar el listado completo de necesidades y motivos de oración de las espigas.</p>
           </div>
 
         </div>
@@ -1232,13 +1464,54 @@
       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
-    // Variables globales (Sin contraseñas en el frontend por seguridad)
+    // Claves de almacenamiento de sesión
+    const AUTH_STORAGE_KEYS = {
+      HISTORIAL: "espigas_auth_historial",
+      ORACION: "espigas_auth_oracion"
+    };
+
+    function getSavedSession(key) {
+      try {
+        const raw = localStorage.getItem(key) || sessionStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveSession(key, data, remember) {
+      try {
+        const serialized = JSON.stringify(data);
+        if (remember) {
+          localStorage.setItem(key, serialized);
+          sessionStorage.removeItem(key);
+        } else {
+          sessionStorage.setItem(key, serialized);
+          localStorage.removeItem(key);
+        }
+      } catch (e) {
+        console.error("Error al guardar sesión:", e);
+      }
+    }
+
+    function removeSession(key) {
+      try {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      } catch (e) {
+        console.error("Error al eliminar sesión:", e);
+      }
+    }
+
+    // Variables globales (Sin contraseñas fijas en el frontend por seguridad)
     let ministeriosData = [];
     let currentData = { fotoBase64: null, fotoMimeType: null };
     let registrosCargados = [];
     let todosLosMotivosOracion = [];
     let cacheMinisterioData = {};
     let esUsuarioMaster = false;
+    let sesionHistorialActiva = null; // { ministerio, token, esMaster, remember }
+    let sesionOracionActiva = null;   // { token, remember }
 
     // Inicializar al cargar la página
     window.onload = async () => {
@@ -1256,9 +1529,34 @@
       } else if (tab === 'consultar') {
         document.getElementById("tabConsultarBtn").classList.add("active");
         document.getElementById("section-consultar").classList.add("active");
+        
+        // Si no está el dashboard visible, verificar si hay sesión guardada para restaurar
+        if (!sesionHistorialActiva && document.getElementById("historialDashboard").style.display === "none") {
+          const saved = getSavedSession(AUTH_STORAGE_KEYS.HISTORIAL);
+          if (saved && saved.ministerio && saved.token) {
+            ejecutarCargaHistorial(saved.ministerio, saved.token, true, saved.remember).catch(e => {
+              console.warn("No se pudo autorecuperar historial:", e);
+            });
+          }
+        }
       } else if (tab === 'oracion') {
         document.getElementById("tabOracionBtn").classList.add("active");
         document.getElementById("section-oracion").classList.add("active");
+
+        // Si no está el dashboard visible, verificar si hay sesión guardada o si es master
+        if (!sesionOracionActiva && document.getElementById("oracionDashboard").style.display === "none") {
+          const saved = getSavedSession(AUTH_STORAGE_KEYS.ORACION);
+          if (saved && saved.token) {
+            ejecutarCargaOracion(saved.token, true, saved.remember).catch(e => {
+              console.warn("No se pudo autorecuperar oración:", e);
+            });
+          } else if (esUsuarioMaster && sesionHistorialActiva && sesionHistorialActiva.token) {
+            // Sinergia: Si ya está logueado como Master en Historial, ingresa automáticamente a Oración
+            ejecutarCargaOracion(sesionHistorialActiva.token, true, true).catch(e => {
+              console.warn("Autologin master en oración:", e);
+            });
+          }
+        }
       }
       window.scrollTo(0, 0);
     }
@@ -1275,11 +1573,15 @@
           
           // Poblar selector de carga
           const minSelect = document.getElementById("ministerio");
-          minSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
+          if (minSelect) minSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
           
-          // Poblar selector de consulta
-          const consMinSelect = document.getElementById("consMinisterio");
-          consMinSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
+          // Poblar selector de login de historial
+          const loginMinSelect = document.getElementById("loginHistorialMinisterio");
+          if (loginMinSelect) loginMinSelect.innerHTML = '<option value="">Selecciona tu ministerio...</option>';
+
+          // Poblar selector de cambio de ministerio para Admin en Dashboard
+          const masterMinSelect = document.getElementById("consMasterMinisterio");
+          if (masterMinSelect) masterMinSelect.innerHTML = '';
 
           // Poblar selector de oración
           const oraMinSelect = document.getElementById("oraMinisterio");
@@ -1288,61 +1590,57 @@
           }
 
           ministeriosData.forEach(m => {
-            minSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
-            consMinSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
+            if (minSelect) minSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
+            if (loginMinSelect) loginMinSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
+            if (masterMinSelect) masterMinSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
             if (oraMinSelect) {
               oraMinSelect.innerHTML += `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)}</option>`;
             }
           });
+
+          // Restaurar sesiones automáticamente en segundo plano
+          await restaurarSesionesAlIniciar();
         }
       } catch (err) {
         console.error("Error al cargar ministerios:", err);
-        document.getElementById("ministerio").innerHTML = '<option value="">Error al cargar ministerios</option>';
-        document.getElementById("consMinisterio").innerHTML = '<option value="">Error al cargar ministerios</option>';
+        const minSelect = document.getElementById("ministerio");
+        if (minSelect) minSelect.innerHTML = '<option value="">Error al cargar ministerios</option>';
+        const loginMinSelect = document.getElementById("loginHistorialMinisterio");
+        if (loginMinSelect) loginMinSelect.innerHTML = '<option value="">Error al cargar ministerios</option>';
+      }
+    }
+
+    async function restaurarSesionesAlIniciar() {
+      // 1. Restaurar Historial si hay sesión guardada
+      const savedHist = getSavedSession(AUTH_STORAGE_KEYS.HISTORIAL);
+      if (savedHist && savedHist.ministerio && savedHist.token) {
+        try {
+          await ejecutarCargaHistorial(savedHist.ministerio, savedHist.token, false, savedHist.remember);
+        } catch (e) {
+          console.warn("Sesión de historial expirada o inválida:", e);
+          cerrarSesionHistorial(false);
+        }
+      }
+
+      // 2. Restaurar Oración si hay sesión guardada
+      const savedOra = getSavedSession(AUTH_STORAGE_KEYS.ORACION);
+      if (savedOra && savedOra.token) {
+        try {
+          await ejecutarCargaOracion(savedOra.token, false, savedOra.remember);
+        } catch (e) {
+          console.warn("Sesión de oración expirada o inválida:", e);
+          cerrarSesionOracion(false);
+        }
       }
     }
 
     function togglePasswordVisibility(id) {
       const input = document.getElementById(id);
+      if (!input) return;
       if (input.type === "password") {
         input.type = "text";
       } else {
         input.type = "password";
-      }
-    }
-
-    // Cuando cambia el ministerio en la consulta
-    function onMinisterioChange() {
-      const minName = document.getElementById("consMinisterio").value;
-      const liderSelect = document.getElementById("consLider");
-      liderSelect.innerHTML = '<option value="TODOS">👥 Todos los líderes</option>';
-
-      const ministerio = ministeriosData.find(m => m.name === minName);
-      if (ministerio && ministerio.lideres) {
-        ministerio.lideres.forEach(l => {
-          liderSelect.innerHTML += `<option value="${escapeHTML(l)}">${escapeHTML(l)}</option>`;
-        });
-      }
-
-      // Dejar campo de clave vacío para que el usuario la ingrese manualmente
-      const passInput = document.getElementById("consPassword");
-      if (passInput) {
-        passInput.value = "";
-        passInput.placeholder = `Ingresá la clave de ${minName || 'tu ministerio'}...`;
-      }
-    }
-
-    function onLiderChange() {
-      const minName = document.getElementById("consMinisterio").value;
-      const lider = document.getElementById("consLider").value;
-      if (cacheMinisterioData[minName]) {
-        const todosLosRegistros = cacheMinisterioData[minName];
-        if (lider && lider.toUpperCase() !== "TODOS" && lider.toUpperCase() !== "ALL") {
-          registrosCargados = todosLosRegistros.filter(r => matchNames(r.lider, lider));
-        } else {
-          registrosCargados = todosLosRegistros;
-        }
-        renderizarHistorial(registrosCargados);
       }
     }
 
@@ -1506,30 +1804,69 @@
     }
 
     // ==========================================
-    // FUNCIONES DE CONSULTA E HISTORIAL POR MES
+    // FUNCIONES DE LOGIN, CONSULTA E HISTORIAL
     // ==========================================
-    async function consultarHistorial() {
-      const minSelect = document.getElementById("consMinisterio");
-      const ministerio = minSelect.value;
-      const lider = document.getElementById("consLider").value;
-      const password = document.getElementById("consPassword").value.trim();
+    async function iniciarSesionHistorial() {
+      const minSelect = document.getElementById("loginHistorialMinisterio");
+      const passInput = document.getElementById("loginHistorialPass");
+      const rememberCheckbox = document.getElementById("rememberHistorial");
+      const errBox = document.getElementById("historialLoginError");
+      const btnSubmit = document.getElementById("btnSubmitLoginHistorial");
+
+      if (errBox) {
+        errBox.style.display = "none";
+        errBox.innerText = "";
+      }
+
+      const ministerio = minSelect ? minSelect.value : "";
+      const token = passInput ? passInput.value.trim() : "";
+      const remember = rememberCheckbox ? rememberCheckbox.checked : false;
 
       if (!ministerio) {
-        alert("Por favor selecciona un ministerio para consultar.");
-        minSelect.focus();
+        if (errBox) {
+          errBox.innerText = "Por favor selecciona tu ministerio.";
+          errBox.style.display = "block";
+        }
+        if (minSelect) minSelect.focus();
         return;
       }
 
-      if (!password) {
-        alert("Por favor ingresa la clave de acceso del ministerio.");
-        document.getElementById("consPassword").focus();
+      if (!token) {
+        if (errBox) {
+          errBox.innerText = "Por favor ingresa la clave de acceso.";
+          errBox.style.display = "block";
+        }
+        if (passInput) passInput.focus();
         return;
       }
 
-      showLoader("Consultando Google Sheets...", "Obteniendo sobres registrados en vivo");
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<span>⏳</span> Verificando...`;
+      }
 
       try {
-        const queryUrl = `${SCRIPT_URL}?action=getHistorial&token=${encodeURIComponent(password)}&ministerio=${encodeURIComponent(ministerio)}&lider=TODOS`;
+        await ejecutarCargaHistorial(ministerio, token, true, remember);
+      } catch (err) {
+        if (errBox) {
+          errBox.innerText = err.message || "Clave de acceso incorrecta para el ministerio seleccionado.";
+          errBox.style.display = "block";
+        }
+      } finally {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = `<span>🚀</span> Iniciar Sesión`;
+        }
+      }
+    }
+
+    async function ejecutarCargaHistorial(ministerio, token, mostrarLoader = true, remember = true) {
+      if (mostrarLoader) {
+        showLoader("Iniciando sesión...", "Consultando registros de " + ministerio);
+      }
+
+      try {
+        const queryUrl = `${SCRIPT_URL}?action=getHistorial&token=${encodeURIComponent(token)}&ministerio=${encodeURIComponent(ministerio)}&lider=TODOS`;
         const response = await fetch(queryUrl);
         const responseText = await response.text();
         
@@ -1543,29 +1880,143 @@
           throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
         }
 
-        hideLoader();
+        if (mostrarLoader) hideLoader();
 
         if (data.error) {
           throw new Error(data.error);
         }
 
         esUsuarioMaster = (data.esMaster === true);
+        sesionHistorialActiva = {
+          ministerio: ministerio,
+          token: token,
+          esMaster: esUsuarioMaster,
+          remember: remember
+        };
 
+        saveSession(AUTH_STORAGE_KEYS.HISTORIAL, sesionHistorialActiva, remember);
+
+        // Actualizar UI del Dashboard
+        const badge = document.getElementById("sessionHistorialBadge");
+        if (badge) {
+          badge.innerHTML = esUsuarioMaster 
+            ? `👑 Administrador General • <span style="font-weight: 600;">${escapeHTML(ministerio)}</span>`
+            : `🏛️ <span style="font-weight: 700;">${escapeHTML(ministerio)}</span>`;
+        }
+
+        // Si es master, mostrar el selector de cambio de ministerio en vivo
+        const masterSwitchContainer = document.getElementById("containerMasterMinisterioSwitch");
+        const masterMinSelect = document.getElementById("consMasterMinisterio");
+        if (masterSwitchContainer && masterMinSelect) {
+          if (esUsuarioMaster) {
+            masterSwitchContainer.style.display = "block";
+            masterMinSelect.value = ministerio;
+          } else {
+            masterSwitchContainer.style.display = "none";
+          }
+        }
+
+        // Poblar selector de líderes para este ministerio
+        actualizarLideresHistorial(ministerio);
+
+        // Guardar en cache y renderizar
         const todosLosRegistros = data.registros || [];
         cacheMinisterioData[ministerio] = todosLosRegistros;
+        registrosCargados = todosLosRegistros;
 
-        // Filtrar por líder si se seleccionó uno específico
+        // Ocultar Gate de Login y mostrar Dashboard
+        document.getElementById("historialLoginGate").style.display = "none";
+        document.getElementById("historialDashboard").style.display = "block";
+
+        renderizarHistorial(registrosCargados);
+
+      } catch (err) {
+        if (mostrarLoader) hideLoader();
+        throw err;
+      }
+    }
+
+    function actualizarLideresHistorial(minName) {
+      const liderSelect = document.getElementById("consLider");
+      if (!liderSelect) return;
+      liderSelect.innerHTML = '<option value="TODOS">👥 Todos los líderes</option>';
+
+      const ministerio = ministeriosData.find(m => m.name === minName);
+      if (ministerio && ministerio.lideres) {
+        ministerio.lideres.forEach(l => {
+          liderSelect.innerHTML += `<option value="${escapeHTML(l)}">${escapeHTML(l)}</option>`;
+        });
+      }
+    }
+
+    async function recargarHistorialActual() {
+      if (!sesionHistorialActiva) {
+        const saved = getSavedSession(AUTH_STORAGE_KEYS.HISTORIAL);
+        if (saved) sesionHistorialActiva = saved;
+      }
+      if (sesionHistorialActiva) {
+        try {
+          await ejecutarCargaHistorial(
+            sesionHistorialActiva.ministerio,
+            sesionHistorialActiva.token,
+            true,
+            sesionHistorialActiva.remember
+          );
+        } catch (e) {
+          alert("Error al actualizar: " + e.message);
+        }
+      } else {
+        cerrarSesionHistorial();
+      }
+    }
+
+    async function onMasterMinisterioChange() {
+      if (!esUsuarioMaster || !sesionHistorialActiva) return;
+      const nuevoMin = document.getElementById("consMasterMinisterio").value;
+      if (!nuevoMin) return;
+
+      try {
+        await ejecutarCargaHistorial(
+          nuevoMin,
+          sesionHistorialActiva.token,
+          true,
+          sesionHistorialActiva.remember
+        );
+      } catch (e) {
+        alert("Error al cambiar ministerio: " + e.message);
+      }
+    }
+
+    function cerrarSesionHistorial(confirmar = true) {
+      removeSession(AUTH_STORAGE_KEYS.HISTORIAL);
+      sesionHistorialActiva = null;
+      esUsuarioMaster = false;
+      registrosCargados = [];
+
+      const passInput = document.getElementById("loginHistorialPass");
+      if (passInput) passInput.value = "";
+
+      const errBox = document.getElementById("historialLoginError");
+      if (errBox) {
+        errBox.style.display = "none";
+        errBox.innerText = "";
+      }
+
+      document.getElementById("historialDashboard").style.display = "none";
+      document.getElementById("historialLoginGate").style.display = "block";
+    }
+
+    function onLiderChange() {
+      const minName = sesionHistorialActiva ? sesionHistorialActiva.ministerio : "";
+      const lider = document.getElementById("consLider").value;
+      if (minName && cacheMinisterioData[minName]) {
+        const todosLosRegistros = cacheMinisterioData[minName];
         if (lider && lider.toUpperCase() !== "TODOS" && lider.toUpperCase() !== "ALL") {
           registrosCargados = todosLosRegistros.filter(r => matchNames(r.lider, lider));
         } else {
           registrosCargados = todosLosRegistros;
         }
-
         renderizarHistorial(registrosCargados);
-
-      } catch (err) {
-        hideLoader();
-        alert("No se pudo obtener el historial: " + err.message);
       }
     }
 
@@ -1712,10 +2163,6 @@
 
     function renderizarHistorial(registros) {
       const registrosValidos = (registros || []).filter(r => r.lider && r.lider.trim() !== "");
-
-      document.getElementById("consultaEmptyState").style.display = "none";
-      const resultadosDiv = document.getElementById("consultaResultados");
-      resultadosDiv.style.display = "block";
 
       // 1. Métricas Globales
       document.getElementById("metricaTotal").innerText = registrosValidos.length;
@@ -1932,21 +2379,58 @@
     }
 
     // ==========================================
-    // FUNCIONES DE MOTIVOS DE ORACIÓN / INTERCESIÓN
+    // FUNCIONES DE LOGIN Y MOTIVOS DE ORACIÓN
     // ==========================================
-    async function consultarMotivosOracion() {
-      const password = document.getElementById("oraPassword").value.trim();
+    async function iniciarSesionOracion() {
+      const passInput = document.getElementById("loginOracionPass");
+      const rememberCheckbox = document.getElementById("rememberOracion");
+      const errBox = document.getElementById("oracionLoginError");
+      const btnSubmit = document.getElementById("btnSubmitLoginOracion");
 
-      if (!password) {
-        alert("Por favor ingresá la clave de acceso para ver los motivos de oración.");
-        document.getElementById("oraPassword").focus();
+      if (errBox) {
+        errBox.style.display = "none";
+        errBox.innerText = "";
+      }
+
+      const token = passInput ? passInput.value.trim() : "";
+      const remember = rememberCheckbox ? rememberCheckbox.checked : false;
+
+      if (!token) {
+        if (errBox) {
+          errBox.innerText = "Por favor ingresa la clave de acceso a oración.";
+          errBox.style.display = "block";
+        }
+        if (passInput) passInput.focus();
         return;
       }
 
-      showLoader("Consultando Motivos de Oración...", "Recopilando peticiones de todas las espigas");
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<span>⏳</span> Verificando...`;
+      }
 
       try {
-        const queryUrl = `${SCRIPT_URL}?action=getMotivosOracion&token=${encodeURIComponent(password)}`;
+        await ejecutarCargaOracion(token, true, remember);
+      } catch (err) {
+        if (errBox) {
+          errBox.innerText = err.message || "Clave de acceso incorrecta para el área de oración.";
+          errBox.style.display = "block";
+        }
+      } finally {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = `<span>🙏</span> Ingresar a Intercesión`;
+        }
+      }
+    }
+
+    async function ejecutarCargaOracion(token, mostrarLoader = true, remember = true) {
+      if (mostrarLoader) {
+        showLoader("Consultando Motivos de Oración...", "Recopilando peticiones de todas las espigas");
+      }
+
+      try {
+        const queryUrl = `${SCRIPT_URL}?action=getMotivosOracion&token=${encodeURIComponent(token)}`;
         const response = await fetch(queryUrl);
         const responseText = await response.text();
 
@@ -1960,19 +2444,65 @@
           throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
         }
 
-        hideLoader();
+        if (mostrarLoader) hideLoader();
 
         if (data.error) {
           throw new Error(data.error);
         }
 
+        sesionOracionActiva = {
+          token: token,
+          remember: remember
+        };
+
+        saveSession(AUTH_STORAGE_KEYS.ORACION, sesionOracionActiva, remember);
+
         todosLosMotivosOracion = data.peticiones || [];
+
+        // Ocultar Gate de Login y mostrar Dashboard
+        document.getElementById("oracionLoginGate").style.display = "none";
+        document.getElementById("oracionDashboard").style.display = "block";
+
         filtrarMotivosLocales();
 
       } catch (err) {
-        hideLoader();
-        alert("No se pudieron obtener los motivos de oración: " + err.message);
+        if (mostrarLoader) hideLoader();
+        throw err;
       }
+    }
+
+    async function recargarOracionActual() {
+      if (!sesionOracionActiva) {
+        const saved = getSavedSession(AUTH_STORAGE_KEYS.ORACION);
+        if (saved) sesionOracionActiva = saved;
+      }
+      if (sesionOracionActiva) {
+        try {
+          await ejecutarCargaOracion(sesionOracionActiva.token, true, sesionOracionActiva.remember);
+        } catch (e) {
+          alert("Error al actualizar motivos: " + e.message);
+        }
+      } else {
+        cerrarSesionOracion();
+      }
+    }
+
+    function cerrarSesionOracion() {
+      removeSession(AUTH_STORAGE_KEYS.ORACION);
+      sesionOracionActiva = null;
+      todosLosMotivosOracion = [];
+
+      const passInput = document.getElementById("loginOracionPass");
+      if (passInput) passInput.value = "";
+
+      const errBox = document.getElementById("oracionLoginError");
+      if (errBox) {
+        errBox.style.display = "none";
+        errBox.innerText = "";
+      }
+
+      document.getElementById("oracionDashboard").style.display = "none";
+      document.getElementById("oracionLoginGate").style.display = "block";
     }
 
     function filtrarMotivosLocales() {
@@ -2053,9 +2583,6 @@
     }
 
     function renderizarMotivosOracion(peticiones) {
-      document.getElementById("oracionEmptyState").style.display = "none";
-      document.getElementById("oracionResultados").style.display = "block";
-
       const lista = peticiones || [];
       document.getElementById("metricaOraTotal").innerText = lista.length;
 
