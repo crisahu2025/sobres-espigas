@@ -1258,6 +1258,11 @@
               </div>
 
               <div class="form-group">
+                <label class="form-label" for="loginHistorialUsuario">Tu Nombre / Usuario</label>
+                <input type="text" class="form-input" id="loginHistorialUsuario" placeholder="Ej: Marcos García" required />
+              </div>
+
+              <div class="form-group">
                 <label class="form-label" for="loginHistorialPass">Clave de Acceso</label>
                 <div class="input-with-icon">
                   <input type="password" class="form-input" id="loginHistorialPass" placeholder="Ingresá la clave de acceso..." required />
@@ -1362,11 +1367,16 @@
           <div id="oracionLoginGate" class="login-gate-card">
             <div class="login-icon-badge">🕊️</div>
             <h2 class="login-title">Área de Intercesión</h2>
-            <p class="login-subtitle">Ingresá la clave de intercesión o clave de administración para acceder al listado de peticiones de oración.</p>
+            <p class="login-subtitle">Ingresá tu nombre y la clave de acceso para ver el listado de peticiones de oración.</p>
 
             <div class="login-error-alert" id="oracionLoginError"></div>
 
             <form class="login-form" onsubmit="event.preventDefault(); iniciarSesionOracion();">
+              <div class="form-group">
+                <label class="form-label" for="loginOracionUsuario">Tu Nombre / Usuario</label>
+                <input type="text" class="form-input" id="loginOracionUsuario" placeholder="Ej: María López" required />
+              </div>
+
               <div class="form-group">
                 <label class="form-label" for="loginOracionPass">Clave de Acceso a Oración</label>
                 <div class="input-with-icon">
@@ -1393,7 +1403,7 @@
             <div class="session-bar">
               <div class="session-info">
                 <span class="session-status-dot"></span>
-                <span class="session-badge">🕊️ Panel de Intercesión</span>
+                <span class="session-badge" id="sessionOracionBadge">🕊️ Panel de Intercesión</span>
               </div>
               <div class="session-actions">
                 <button type="button" class="btn-refresh" onclick="recargarOracionActual()">
@@ -1534,7 +1544,7 @@
         if (!sesionHistorialActiva && document.getElementById("historialDashboard").style.display === "none") {
           const saved = getSavedSession(AUTH_STORAGE_KEYS.HISTORIAL);
           if (saved && saved.ministerio && saved.token) {
-            ejecutarCargaHistorial(saved.ministerio, saved.token, true, saved.remember).catch(e => {
+            ejecutarCargaHistorial(saved.ministerio, saved.token, saved.usuario || "Anónimo", true, saved.remember).catch(e => {
               console.warn("No se pudo autorecuperar historial:", e);
             });
           }
@@ -1547,12 +1557,12 @@
         if (!sesionOracionActiva && document.getElementById("oracionDashboard").style.display === "none") {
           const saved = getSavedSession(AUTH_STORAGE_KEYS.ORACION);
           if (saved && saved.token) {
-            ejecutarCargaOracion(saved.token, true, saved.remember).catch(e => {
+            ejecutarCargaOracion(saved.token, saved.usuario || "Anónimo", true, saved.remember).catch(e => {
               console.warn("No se pudo autorecuperar oración:", e);
             });
           } else if (esUsuarioMaster && sesionHistorialActiva && sesionHistorialActiva.token) {
             // Sinergia: Si ya está logueado como Master en Historial, ingresa automáticamente a Oración
-            ejecutarCargaOracion(sesionHistorialActiva.token, true, true).catch(e => {
+            ejecutarCargaOracion(sesionHistorialActiva.token, sesionHistorialActiva.usuario || "Admin", true, true).catch(e => {
               console.warn("Autologin master en oración:", e);
             });
           }
@@ -1615,7 +1625,7 @@
       const savedHist = getSavedSession(AUTH_STORAGE_KEYS.HISTORIAL);
       if (savedHist && savedHist.ministerio && savedHist.token) {
         try {
-          await ejecutarCargaHistorial(savedHist.ministerio, savedHist.token, false, savedHist.remember);
+          await ejecutarCargaHistorial(savedHist.ministerio, savedHist.token, savedHist.usuario || "Anónimo", false, savedHist.remember);
         } catch (e) {
           console.warn("Sesión de historial expirada o inválida:", e);
           cerrarSesionHistorial(false);
@@ -1626,7 +1636,7 @@
       const savedOra = getSavedSession(AUTH_STORAGE_KEYS.ORACION);
       if (savedOra && savedOra.token) {
         try {
-          await ejecutarCargaOracion(savedOra.token, false, savedOra.remember);
+          await ejecutarCargaOracion(savedOra.token, savedOra.usuario || "Anónimo", false, savedOra.remember);
         } catch (e) {
           console.warn("Sesión de oración expirada o inválida:", e);
           cerrarSesionOracion(false);
@@ -1808,6 +1818,7 @@
     // ==========================================
     async function iniciarSesionHistorial() {
       const minSelect = document.getElementById("loginHistorialMinisterio");
+      const userInput = document.getElementById("loginHistorialUsuario");
       const passInput = document.getElementById("loginHistorialPass");
       const rememberCheckbox = document.getElementById("rememberHistorial");
       const errBox = document.getElementById("historialLoginError");
@@ -1819,6 +1830,7 @@
       }
 
       const ministerio = minSelect ? minSelect.value : "";
+      const usuario = userInput ? userInput.value.trim() : "";
       const token = passInput ? passInput.value.trim() : "";
       const remember = rememberCheckbox ? rememberCheckbox.checked : false;
 
@@ -1828,6 +1840,15 @@
           errBox.style.display = "block";
         }
         if (minSelect) minSelect.focus();
+        return;
+      }
+
+      if (!usuario) {
+        if (errBox) {
+          errBox.innerText = "Por favor ingresa tu nombre o usuario.";
+          errBox.style.display = "block";
+        }
+        if (userInput) userInput.focus();
         return;
       }
 
@@ -1846,7 +1867,7 @@
       }
 
       try {
-        await ejecutarCargaHistorial(ministerio, token, true, remember);
+        await ejecutarCargaHistorial(ministerio, token, usuario, true, remember);
       } catch (err) {
         if (errBox) {
           errBox.innerText = err.message || "Clave de acceso incorrecta para el ministerio seleccionado.";
@@ -1860,13 +1881,13 @@
       }
     }
 
-    async function ejecutarCargaHistorial(ministerio, token, mostrarLoader = true, remember = true) {
+    async function ejecutarCargaHistorial(ministerio, token, usuario = "Anónimo", mostrarLoader = true, remember = true) {
       if (mostrarLoader) {
         showLoader("Iniciando sesión...", "Consultando registros de " + ministerio);
       }
 
       try {
-        const queryUrl = `${SCRIPT_URL}?action=getHistorial&token=${encodeURIComponent(token)}&ministerio=${encodeURIComponent(ministerio)}&lider=TODOS`;
+        const queryUrl = `${SCRIPT_URL}?action=getHistorial&token=${encodeURIComponent(token)}&ministerio=${encodeURIComponent(ministerio)}&usuario=${encodeURIComponent(usuario)}&lider=TODOS`;
         const response = await fetch(queryUrl);
         const responseText = await response.text();
         
@@ -1890,18 +1911,19 @@
         sesionHistorialActiva = {
           ministerio: ministerio,
           token: token,
+          usuario: usuario,
           esMaster: esUsuarioMaster,
           remember: remember
         };
 
         saveSession(AUTH_STORAGE_KEYS.HISTORIAL, sesionHistorialActiva, remember);
 
-        // Actualizar UI del Dashboard
+        // Actualizar UI del Dashboard con nombre de usuario
         const badge = document.getElementById("sessionHistorialBadge");
         if (badge) {
           badge.innerHTML = esUsuarioMaster 
-            ? `👑 Administrador General • <span style="font-weight: 600;">${escapeHTML(ministerio)}</span>`
-            : `🏛️ <span style="font-weight: 700;">${escapeHTML(ministerio)}</span>`;
+            ? `👑 Admin • <span style="font-weight: 600;">${escapeHTML(ministerio)}</span> <span style="font-size: 13px; font-weight: 600; color: #855913; background: #faefd4; padding: 2px 8px; border-radius: 6px;">👤 ${escapeHTML(usuario)}</span>`
+            : `🏛️ <span style="font-weight: 700;">${escapeHTML(ministerio)}</span> <span style="font-size: 13px; font-weight: 600; color: #855913; background: #faefd4; padding: 2px 8px; border-radius: 6px;">👤 ${escapeHTML(usuario)}</span>`;
         }
 
         // Si es master, mostrar el selector de cambio de ministerio en vivo
@@ -1959,6 +1981,7 @@
           await ejecutarCargaHistorial(
             sesionHistorialActiva.ministerio,
             sesionHistorialActiva.token,
+            sesionHistorialActiva.usuario || "Anónimo",
             true,
             sesionHistorialActiva.remember
           );
@@ -1979,6 +2002,7 @@
         await ejecutarCargaHistorial(
           nuevoMin,
           sesionHistorialActiva.token,
+          sesionHistorialActiva.usuario || "Admin",
           true,
           sesionHistorialActiva.remember
         );
@@ -1995,6 +2019,9 @@
 
       const passInput = document.getElementById("loginHistorialPass");
       if (passInput) passInput.value = "";
+
+      const userInput = document.getElementById("loginHistorialUsuario");
+      if (userInput) userInput.value = "";
 
       const errBox = document.getElementById("historialLoginError");
       if (errBox) {
@@ -2382,6 +2409,7 @@
     // FUNCIONES DE LOGIN Y MOTIVOS DE ORACIÓN
     // ==========================================
     async function iniciarSesionOracion() {
+      const userInput = document.getElementById("loginOracionUsuario");
       const passInput = document.getElementById("loginOracionPass");
       const rememberCheckbox = document.getElementById("rememberOracion");
       const errBox = document.getElementById("oracionLoginError");
@@ -2392,8 +2420,18 @@
         errBox.innerText = "";
       }
 
+      const usuario = userInput ? userInput.value.trim() : "";
       const token = passInput ? passInput.value.trim() : "";
       const remember = rememberCheckbox ? rememberCheckbox.checked : false;
+
+      if (!usuario) {
+        if (errBox) {
+          errBox.innerText = "Por favor ingresa tu nombre o usuario.";
+          errBox.style.display = "block";
+        }
+        if (userInput) userInput.focus();
+        return;
+      }
 
       if (!token) {
         if (errBox) {
@@ -2410,7 +2448,7 @@
       }
 
       try {
-        await ejecutarCargaOracion(token, true, remember);
+        await ejecutarCargaOracion(token, usuario, true, remember);
       } catch (err) {
         if (errBox) {
           errBox.innerText = err.message || "Clave de acceso incorrecta para el área de oración.";
@@ -2424,13 +2462,13 @@
       }
     }
 
-    async function ejecutarCargaOracion(token, mostrarLoader = true, remember = true) {
+    async function ejecutarCargaOracion(token, usuario = "Anónimo", mostrarLoader = true, remember = true) {
       if (mostrarLoader) {
         showLoader("Consultando Motivos de Oración...", "Recopilando peticiones de todas las espigas");
       }
 
       try {
-        const queryUrl = `${SCRIPT_URL}?action=getMotivosOracion&token=${encodeURIComponent(token)}`;
+        const queryUrl = `${SCRIPT_URL}?action=getMotivosOracion&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}`;
         const response = await fetch(queryUrl);
         const responseText = await response.text();
 
@@ -2452,12 +2490,19 @@
 
         sesionOracionActiva = {
           token: token,
+          usuario: usuario,
           remember: remember
         };
 
         saveSession(AUTH_STORAGE_KEYS.ORACION, sesionOracionActiva, remember);
 
         todosLosMotivosOracion = data.peticiones || [];
+
+        // Actualizar badge de sesión de oración
+        const badge = document.getElementById("sessionOracionBadge");
+        if (badge) {
+          badge.innerHTML = `🕊️ Panel de Intercesión <span style="font-size: 13px; font-weight: 600; color: #855913; background: #faefd4; padding: 2px 8px; border-radius: 6px;">👤 ${escapeHTML(usuario)}</span>`;
+        }
 
         // Ocultar Gate de Login y mostrar Dashboard
         document.getElementById("oracionLoginGate").style.display = "none";
@@ -2478,7 +2523,7 @@
       }
       if (sesionOracionActiva) {
         try {
-          await ejecutarCargaOracion(sesionOracionActiva.token, true, sesionOracionActiva.remember);
+          await ejecutarCargaOracion(sesionOracionActiva.token, sesionOracionActiva.usuario || "Anónimo", true, sesionOracionActiva.remember);
         } catch (e) {
           alert("Error al actualizar motivos: " + e.message);
         }
@@ -2494,6 +2539,9 @@
 
       const passInput = document.getElementById("loginOracionPass");
       if (passInput) passInput.value = "";
+
+      const userInput = document.getElementById("loginOracionUsuario");
+      if (userInput) userInput.value = "";
 
       const errBox = document.getElementById("oracionLoginError");
       if (errBox) {
