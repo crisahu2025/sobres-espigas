@@ -1482,23 +1482,19 @@
 
     function getSavedSession(key) {
       try {
-        const raw = localStorage.getItem(key) || sessionStorage.getItem(key);
+        localStorage.removeItem(key);
+        const raw = sessionStorage.getItem(key);
         return raw ? JSON.parse(raw) : null;
       } catch (e) {
         return null;
       }
     }
 
-    function saveSession(key, data, remember) {
+    function saveSession(key, data) {
       try {
         const serialized = JSON.stringify(data);
-        if (remember) {
-          localStorage.setItem(key, serialized);
-          sessionStorage.removeItem(key);
-        } else {
-          sessionStorage.setItem(key, serialized);
-          localStorage.removeItem(key);
-        }
+        sessionStorage.setItem(key, serialized);
+        localStorage.removeItem(key);
       } catch (e) {
         console.error("Error al guardar sesión:", e);
       }
@@ -1513,6 +1509,33 @@
       }
     }
 
+    // ==========================================
+    // CONTROL DE INACTIVIDAD — SOBRES (2 MINUTOS)
+    // ==========================================
+    let sobresInactivityTimer = null;
+    const SOBRES_INACTIVITY_LIMIT_MS = 2 * 60 * 1000; // 2 minutos
+
+    function resetSobresInactivityTimer() {
+      if (!sesionHistorialActiva && !sesionOracionActiva) return;
+      if (sobresInactivityTimer) clearTimeout(sobresInactivityTimer);
+      sobresInactivityTimer = setTimeout(onSobresInactivityTimeout, SOBRES_INACTIVITY_LIMIT_MS);
+    }
+
+    function initSobresInactivityTracker() {
+      const activityEvents = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'pointerdown'];
+      activityEvents.forEach(evt => {
+        window.addEventListener(evt, resetSobresInactivityTimer, { passive: true });
+      });
+      resetSobresInactivityTimer();
+    }
+
+    function onSobresInactivityTimeout() {
+      if (!sesionHistorialActiva && !sesionOracionActiva) return;
+      if (sesionHistorialActiva) cerrarSesionHistorial(false);
+      if (sesionOracionActiva) cerrarSesionOracion();
+      alert("⏳ Tu sesión fue cerrada automáticamente tras 2 minutos de inactividad.");
+    }
+
     // Variables globales (Sin contraseñas fijas en el frontend por seguridad)
     let ministeriosData = [];
     let currentData = { fotoBase64: null, fotoMimeType: null };
@@ -1520,11 +1543,12 @@
     let todosLosMotivosOracion = [];
     let cacheMinisterioData = {};
     let esUsuarioMaster = false;
-    let sesionHistorialActiva = null; // { ministerio, token, esMaster, remember }
-    let sesionOracionActiva = null;   // { token, remember }
+    let sesionHistorialActiva = null; // { ministerio, token, esMaster }
+    let sesionOracionActiva = null;   // { token }
 
     // Inicializar al cargar la página
     window.onload = async () => {
+      initSobresInactivityTracker();
       await cargarMinisterios();
     };
 
@@ -1912,11 +1936,11 @@
           ministerio: ministerio,
           token: token,
           usuario: usuario,
-          esMaster: esUsuarioMaster,
-          remember: remember
+          esMaster: esUsuarioMaster
         };
 
-        saveSession(AUTH_STORAGE_KEYS.HISTORIAL, sesionHistorialActiva, remember);
+        saveSession(AUTH_STORAGE_KEYS.HISTORIAL, sesionHistorialActiva);
+        resetSobresInactivityTimer();
 
         // Actualizar UI del Dashboard con nombre de usuario
         const badge = document.getElementById("sessionHistorialBadge");
@@ -2490,11 +2514,11 @@
 
         sesionOracionActiva = {
           token: token,
-          usuario: usuario,
-          remember: remember
+          usuario: usuario
         };
 
-        saveSession(AUTH_STORAGE_KEYS.ORACION, sesionOracionActiva, remember);
+        saveSession(AUTH_STORAGE_KEYS.ORACION, sesionOracionActiva);
+        resetSobresInactivityTimer();
 
         todosLosMotivosOracion = data.peticiones || [];
 
