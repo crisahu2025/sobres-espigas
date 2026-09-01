@@ -1,1 +1,14 @@
+# Google Apps Script & Backend Server Scripts
+*.gs
+*APPS-SCRIPT*
+*bot_logic*
+*Script*.txt
 *.txt
+Codigo de appscript pagina web.txt
+ExtraerFechas.txt
+
+# Deploy & Environment
+.vercel
+node_modules/
+.gemini/
+.env*
