@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="manifest" href="manifest.json?v=1.0.2" />
+  <link rel="manifest" href="manifest.json?v=1.0.3" />
   <meta name="theme-color" content="#1d1a18" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -50,31 +50,19 @@
       line-height: 1.6;
     }
 
+    ::selection {
+      background: rgba(222, 188, 116, 0.45);
+      color: #1d1a18;
+    }
+
     .container {
       max-width: 860px;
       margin: 0 auto;
-      padding: 30px 20px 100px;
+      padding: 24px 20px 100px;
     }
-
-    .header {
-      text-align: center;
-      margin-bottom: 24px;
-      animation: fadeInDown 0.6s ease;
-    }
-
-    .header h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 34px;
-      font-weight: 800;
-      color: var(--primary);
-      letter-spacing: -0.5px;
-    }
-
-    .header p {
-      color: #3b3530;
-      font-size: 15px;
-      margin-top: 6px;
-      font-weight: 500;
+    .app-navbar, .nav-brand, .tab-btn, .step-title, .login-title {
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     /* ========================================================= */
@@ -1447,11 +1435,6 @@
   </div>
 
   <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <h1>Carga y Control de Espigas</h1>
-      <p>Iglesia Gran Rey • Sistema de Sobres Ministeriales</p>
-    </div>
 
     <!-- ========================================================= -->
     <!-- SECCIÓN 1: CARGA DE SOBRES (FORMULARIO EN 3 PASOS)        -->
@@ -2042,7 +2025,7 @@
 
       // Registro de Service Worker para PWA y control de actualización
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=1.0.2').then(reg => {
+        navigator.serviceWorker.register('./sw.js?v=1.0.3').then(reg => {
           navigator.serviceWorker.addEventListener('controllerchange', () => {
             window.location.reload();
           });
