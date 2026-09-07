@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="manifest" href="manifest.json?v=1.0.1" />
+  <meta name="theme-color" content="#1d1a18" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Espigas" />
+  <link rel="apple-touch-icon" href="escudo.png" />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Orbitron:wght@400;700;900&display=swap"
     rel="stylesheet">
@@ -71,46 +77,173 @@
       font-weight: 500;
     }
 
-    /* Tab Switcher */
-    .tab-nav-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 28px;
+    /* ========================================================= */
+    /* NAVBAR SUPERIOR FIJA (STICKY NAVBAR) — ESTÉTICA GRAN REY  */
+    /* ========================================================= */
+    .app-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #1d1a18;
+      border-bottom: 2px solid rgba(222, 188, 116, 0.4);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      width: 100%;
     }
 
-    .tab-nav {
-      display: inline-flex;
-      background: rgba(29, 26, 24, 0.12);
-      padding: 6px;
-      border-radius: 999px;
+    .nav-inner {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      flex-shrink: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+    }
+
+    .nav-brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .nav-brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-brand-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent); /* #debc74 */
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
       gap: 6px;
-      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(222, 188, 116, 0.25);
     }
 
     .tab-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
+      gap: 7px;
+      padding: 8px 18px;
       border-radius: 999px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       border: none;
       background: transparent;
-      color: var(--primary);
+      color: #e2e8f0;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       font-family: var(--font-sans);
+      white-space: nowrap;
     }
 
     .tab-btn.active {
-      background: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(29, 26, 24, 0.25);
+      background: #debc74;
+      color: #1d1a18;
+      box-shadow: 0 2px 10px rgba(222, 188, 116, 0.35);
     }
 
     .tab-btn:hover:not(.active) {
-      background: rgba(29, 26, 24, 0.08);
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .btn-pwa-install {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #debc74 0%, #c9a456 100%);
+      color: #1d1a18;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(222, 188, 116, 0.35);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-pwa-install:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(222, 188, 116, 0.5);
+    }
+
+    @media (max-width: 860px) {
+      .nav-inner {
+        flex-wrap: wrap;
+        padding: 8px 14px;
+        gap: 8px;
+      }
+
+      .nav-brand {
+        order: 1;
+      }
+
+      .nav-actions {
+        order: 2;
+      }
+
+      .nav-links {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        justify-content: flex-start;
+        padding: 4px;
+      }
+
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-links .tab-btn {
+        padding: 7px 14px;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
     }
 
     .main-card {
@@ -1053,6 +1186,210 @@
       gap: 14px;
       align-items: center;
     }
+
+    /* ========================================================= */
+    /* FOOTER SOBRIO CON ENLACE DE ADMINISTRADOR                 */
+    /* ========================================================= */
+    .app-footer {
+      margin-top: 40px;
+      padding: 24px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(29, 26, 24, 0.15);
+      background: rgba(29, 26, 24, 0.04);
+      border-radius: var(--radius-sm);
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: #3b3530;
+    }
+
+    .footer-admin-link {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(29, 26, 24, 0.06);
+      border: 1px solid rgba(29, 26, 24, 0.14);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .footer-admin-link:hover {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* ========================================================= */
+    /* MÓDULO DE AUDITORÍA Y ASISTENCIA POR PERSONA             */
+    /* ========================================================= */
+    .audit-search-container {
+      background: #fdf8eb;
+      border: 1.5px solid #f3d79b;
+      border-radius: var(--radius-sm);
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+
+    .audit-person-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      margin-bottom: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .audit-person-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 14px;
+    }
+
+    .audit-person-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .audit-status-badge {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .audit-status-success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #15803d;
+    }
+
+    .audit-status-warning {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #b45309;
+    }
+
+    .audit-status-info {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+    }
+
+    .audit-metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .audit-metric-box {
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .audit-metric-box.asistencias {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+    }
+
+    .audit-metric-box.ausencias {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+    }
+
+    .audit-metric-box .metric-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .audit-metric-box.asistencias .metric-num {
+      color: #16a34a;
+    }
+
+    .audit-metric-box.ausencias .metric-num {
+      color: #d97706;
+    }
+
+    .audit-metric-box .metric-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .audit-section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .audit-item-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .audit-item-card:hover {
+      border-color: #cbd5e1;
+      background: #f1f5f9;
+    }
+
+    .audit-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .audit-item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      font-size: 13px;
+    }
   </style>
 </head>
 
@@ -1063,6 +1400,37 @@
     <h3 id="loaderTitle" style="color: var(--primary); font-family: 'Outfit', sans-serif;">Procesando...</h3>
     <p id="loaderSub" style="color: var(--muted);">Por favor esperá un momento</p>
   </div>
+
+  <!-- Barra de Navegación Superior Fija (Sticky Navbar) -->
+  <nav class="app-navbar">
+    <div class="nav-inner">
+      <a href="javascript:void(0)" class="nav-brand" onclick="switchAppTab('cargar')" title="Iglesia Gran Rey">
+        <img src="escudo.png" alt="Escudo Iglesia Gran Rey" class="nav-logo" />
+        <div class="nav-brand-text">
+          <span class="nav-brand-title">IGLESIA GRAN REY</span>
+          <span class="nav-brand-subtitle">Sobres de Espigas</span>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <button class="tab-btn active" id="tabCargarBtn" onclick="switchAppTab('cargar')">
+          <span>📝</span> Cargar Sobre
+        </button>
+        <button class="tab-btn" id="tabConsultarBtn" onclick="switchAppTab('consultar')">
+          <span>🔍</span> Consultar Historial
+        </button>
+        <button class="tab-btn" id="tabOracionBtn" onclick="switchAppTab('oracion')">
+          <span>🕊️</span> Motivos de Oración
+        </button>
+      </div>
+
+      <div class="nav-actions">
+        <button id="btnInstallPwa" class="btn-pwa-install" style="display: none;" type="button">
+          📱 Instalar App
+        </button>
+      </div>
+    </div>
+  </nav>
 
   <!-- Modal para ver foto completa -->
   <div class="photo-modal" id="photoModal" onclick="closePhotoModal(event)">
@@ -1083,21 +1451,6 @@
     <div class="header">
       <h1>Carga y Control de Espigas</h1>
       <p>Iglesia Gran Rey • Sistema de Sobres Ministeriales</p>
-    </div>
-
-    <!-- Navegación entre Cargar, Consultar y Motivos de Oración -->
-    <div class="tab-nav-wrapper">
-      <div class="tab-nav">
-        <button class="tab-btn active" id="tabCargarBtn" onclick="switchAppTab('cargar')">
-          <span>📝</span> Cargar Sobre
-        </button>
-        <button class="tab-btn" id="tabConsultarBtn" onclick="switchAppTab('consultar')">
-          <span>🔍</span> Consultar Historial
-        </button>
-        <button class="tab-btn" id="tabOracionBtn" onclick="switchAppTab('oracion')">
-          <span>🙏</span> Motivos de Oración
-        </button>
-      </div>
     </div>
 
     <!-- ========================================================= -->
@@ -1259,13 +1612,13 @@
 
               <div class="form-group">
                 <label class="form-label" for="loginHistorialUsuario">Tu Nombre / Usuario</label>
-                <input type="text" class="form-input" id="loginHistorialUsuario" placeholder="Ej: Marcos García" required />
+                <input type="text" class="form-input" id="loginHistorialUsuario" name="username" autocomplete="username" placeholder="Ej: Marcos García" required />
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="loginHistorialPass">Clave de Acceso</label>
                 <div class="input-with-icon">
-                  <input type="password" class="form-input" id="loginHistorialPass" placeholder="Ingresá la clave de acceso..." required />
+                  <input type="password" class="form-input" id="loginHistorialPass" name="password" autocomplete="current-password" placeholder="Ingresá la clave de acceso..." required />
                   <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginHistorialPass')">👁️</button>
                 </div>
               </div>
@@ -1374,13 +1727,13 @@
             <form class="login-form" onsubmit="event.preventDefault(); iniciarSesionOracion();">
               <div class="form-group">
                 <label class="form-label" for="loginOracionUsuario">Tu Nombre / Usuario</label>
-                <input type="text" class="form-input" id="loginOracionUsuario" placeholder="Ej: María López" required />
+                <input type="text" class="form-input" id="loginOracionUsuario" name="username" autocomplete="username" placeholder="Ej: María López" required />
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="loginOracionPass">Clave de Acceso a Oración</label>
                 <div class="input-with-icon">
-                  <input type="password" class="form-input" id="loginOracionPass" placeholder="Ingresá la clave de oración..." required />
+                  <input type="password" class="form-input" id="loginOracionPass" name="password" autocomplete="current-password" placeholder="Ingresá la clave de oración..." required />
                   <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginOracionPass')">👁️</button>
                 </div>
               </div>
@@ -1463,6 +1816,105 @@
       </div>
     </div>
 
+    <!-- ========================================================= -->
+    <!-- SECCIÓN 4: AUDITORÍA Y ASISTENCIA POR PERSONA (ADMIN)     -->
+    <!-- ========================================================= -->
+    <div class="app-section" id="section-auditoria">
+      <div class="main-card">
+        <div class="card-body">
+
+          <!-- GATE DE LOGIN DE AUDITORÍA -->
+          <div id="auditoriaLoginGate" class="login-gate-card">
+            <div class="login-icon-badge">🛡️</div>
+            <h2 class="login-title">Panel de Auditoría y Asistencias</h2>
+            <p class="login-subtitle">Ingresá con tu usuario y la clave de administración o auditoría para consultar asistencias individuales.</p>
+
+            <div class="login-error-alert" id="auditoriaLoginError"></div>
+
+            <form class="login-form" onsubmit="event.preventDefault(); iniciarSesionAuditoria();">
+              <div class="form-group">
+                <label class="form-label" for="loginAuditoriaUsuario">Usuario Administrador</label>
+                <input type="text" class="form-input" id="loginAuditoriaUsuario" name="username" autocomplete="username" placeholder="Ej: Administrador" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="loginAuditoriaPass">Clave de Acceso</label>
+                <div class="input-with-icon">
+                  <input type="password" class="form-input" id="loginAuditoriaPass" name="password" autocomplete="current-password" placeholder="Ingresá la clave de administración o auditoría..." required />
+                  <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginAuditoriaPass')">👁️</button>
+                </div>
+              </div>
+
+              <label class="remember-me-container">
+                <input type="checkbox" id="rememberAuditoria" checked />
+                <span>Mantener sesión iniciada en este dispositivo</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmitLoginAuditoria" style="width: 100%;">
+                <span>🛡️</span> Ingresar a Auditoría
+              </button>
+            </form>
+
+            <div style="margin-top: 18px; text-align: center;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="switchAppTab('cargar')">← Volver al inicio</button>
+            </div>
+          </div>
+
+          <!-- DASHBOARD AUTENTICADO DE AUDITORÍA -->
+          <div id="auditoriaDashboard" style="display: none;">
+            
+            <!-- Barra de Sesión Activa -->
+            <div class="session-bar">
+              <div class="session-info">
+                <span class="session-status-dot"></span>
+                <span class="session-badge" id="sessionAuditoriaBadge">🛡️ Modo Auditoría</span>
+              </div>
+              <div class="session-actions">
+                <button type="button" class="btn btn-outline btn-sm" onclick="switchAppTab('cargar')">
+                  <span>🏠</span> Inicio
+                </button>
+                <button type="button" class="btn-logout" onclick="cerrarSesionAuditoria()">
+                  <span>🚪</span> Cerrar Sesión
+                </button>
+              </div>
+            </div>
+
+            <!-- Buscador de Personas -->
+            <div class="audit-search-container">
+              <h3 style="font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">🔍 Consulta Individual de Asistencia</h3>
+              <p style="font-size: 13.5px; color: var(--muted); margin-bottom: 16px;">
+                Ingresá el nombre y/o apellido de la persona (ej: "Juan Pérez") para consultar su historial de asistencias a espigas y ausencias reportadas en todos los ministerios.
+              </p>
+              <form class="audit-search-form" onsubmit="event.preventDefault(); ejecutarBusquedaPersona();">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; width: 100%;">
+                  <input type="text" class="form-input" id="inputBuscarPersona" placeholder="Ej: Juan Pérez o María..." style="flex: 1; min-width: 240px;" required />
+                  <button type="submit" class="btn btn-primary" id="btnBuscarPersona" style="width: auto; min-width: 140px;">
+                    <span>🔍</span> Buscar
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Contenedor Dinámico de Resultados de Auditoría -->
+            <div id="auditoriaResultados"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Sobrio con Acceso de Administrador -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div class="footer-text">
+          © 2026 Iglesia Gran Rey • Sistema de Sobres de Espigas
+        </div>
+        <div class="footer-links">
+          <a href="javascript:void(0)" onclick="abrirSeccionAuditoria()" class="footer-admin-link">🔒 Consulta de Asistencias (Admin)</a>
+        </div>
+      </div>
+    </footer>
+
   </div>
 
   <script>
@@ -1477,7 +1929,8 @@
     // Claves de almacenamiento de sesión
     const AUTH_STORAGE_KEYS = {
       HISTORIAL: "espigas_auth_historial",
-      ORACION: "espigas_auth_oracion"
+      ORACION: "espigas_auth_oracion",
+      AUDITORIA: "espigas_auth_auditoria"
     };
 
     function getSavedSession(key) {
@@ -1516,7 +1969,7 @@
     const SOBRES_INACTIVITY_LIMIT_MS = 2 * 60 * 1000; // 2 minutos
 
     function resetSobresInactivityTimer() {
-      if (!sesionHistorialActiva && !sesionOracionActiva) return;
+      if (!sesionHistorialActiva && !sesionOracionActiva && !sesionAuditoriaActiva) return;
       if (sobresInactivityTimer) clearTimeout(sobresInactivityTimer);
       sobresInactivityTimer = setTimeout(onSobresInactivityTimeout, SOBRES_INACTIVITY_LIMIT_MS);
     }
@@ -1530,9 +1983,10 @@
     }
 
     function onSobresInactivityTimeout() {
-      if (!sesionHistorialActiva && !sesionOracionActiva) return;
+      if (!sesionHistorialActiva && !sesionOracionActiva && !sesionAuditoriaActiva) return;
       if (sesionHistorialActiva) cerrarSesionHistorial(false);
       if (sesionOracionActiva) cerrarSesionOracion();
+      if (sesionAuditoriaActiva) cerrarSesionAuditoria();
       alert("⏳ Tu sesión fue cerrada automáticamente tras 2 minutos de inactividad.");
     }
 
@@ -1545,10 +1999,63 @@
     let esUsuarioMaster = false;
     let sesionHistorialActiva = null; // { ministerio, token, esMaster }
     let sesionOracionActiva = null;   // { token }
+    let sesionAuditoriaActiva = null; // { token, usuario }
+
+    // ==========================================
+    // MANEJO DE INSTALACIÓN PWA (CERO SPAM / CERO POPUPS)
+    // ==========================================
+    let deferredPrompt = null;
+
+    function setupPwaInstall() {
+      const btn = document.getElementById("btnInstallPwa");
+      if (!btn) return;
+
+      // Ocultar si ya está instalada o en modo standalone
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        btn.style.display = "none";
+        return;
+      }
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (!window.matchMedia('(display-mode: standalone)').matches) {
+          btn.style.display = 'inline-flex';
+        }
+      });
+
+      btn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          console.log('App instalada con éxito');
+        }
+        deferredPrompt = null;
+        btn.style.display = 'none';
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        btn.style.display = 'none';
+      });
+
+      // Registro de Service Worker para PWA y control de actualización
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js?v=1.0.1').then(reg => {
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            window.location.reload();
+          });
+        }).catch(err => {
+          console.warn('SW no registrado:', err);
+        });
+      }
+    }
 
     // Inicializar al cargar la página
     window.onload = async () => {
       initSobresInactivityTracker();
+      setupPwaInstall();
       await cargarMinisterios();
     };
 
@@ -2808,6 +3315,393 @@
         console.error("Error al copiar:", err);
         alert("No se pudo copiar automáticamente: " + texto);
       });
+    }
+
+    // ==========================================
+    // MÓDULO DE AUDITORÍA Y ASISTENCIAS (ADMIN)
+    // ==========================================
+    function abrirSeccionAuditoria() {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".app-section").forEach(sec => sec.classList.remove("active"));
+
+      const auditSection = document.getElementById("section-auditoria");
+      if (auditSection) {
+        auditSection.classList.add("active");
+      }
+
+      // Si no está el dashboard visible, verificar sesión guardada o master activo
+      if (!sesionAuditoriaActiva && document.getElementById("auditoriaDashboard").style.display === "none") {
+        const saved = getSavedSession(AUTH_STORAGE_KEYS.AUDITORIA);
+        if (saved && saved.token) {
+          sesionAuditoriaActiva = saved;
+          document.getElementById("auditoriaLoginGate").style.display = "none";
+          document.getElementById("auditoriaDashboard").style.display = "block";
+          const badge = document.getElementById("sessionAuditoriaBadge");
+          if (badge) {
+            badge.innerHTML = `🛡️ Modo Auditoría <span style="font-size: 13px; font-weight: 600; color: #855913; background: #faefd4; padding: 2px 8px; border-radius: 6px;">👤 ${escapeHTML(saved.usuario || "Admin")}</span>`;
+          }
+          resetSobresInactivityTimer();
+        } else if (esUsuarioMaster && sesionHistorialActiva && sesionHistorialActiva.token) {
+          sesionAuditoriaActiva = {
+            token: sesionHistorialActiva.token,
+            usuario: sesionHistorialActiva.usuario || "Admin"
+          };
+          saveSession(AUTH_STORAGE_KEYS.AUDITORIA, sesionAuditoriaActiva);
+          document.getElementById("auditoriaLoginGate").style.display = "none";
+          document.getElementById("auditoriaDashboard").style.display = "block";
+          const badge = document.getElementById("sessionAuditoriaBadge");
+          if (badge) {
+            badge.innerHTML = `🛡️ Modo Auditoría <span style="font-size: 13px; font-weight: 600; color: #855913; background: #faefd4; padding: 2px 8px; border-radius: 6px;">👤 ${escapeHTML(sesionAuditoriaActiva.usuario)}</span>`;
+          }
+          resetSobresInactivityTimer();
+        } else {
+          document.getElementById("auditoriaLoginGate").style.display = "block";
+          document.getElementById("auditoriaDashboard").style.display = "none";
+        }
+      }
+      window.scrollTo(0, 0);
+    }
+
+    async function iniciarSesionAuditoria() {
+      const errBox = document.getElementById("auditoriaLoginError");
+      const userInput = document.getElementById("loginAuditoriaUsuario");
+      const passInput = document.getElementById("loginAuditoriaPass");
+      const rememberCheckbox = document.getElementById("rememberAuditoria");
+      const btnSubmit = document.getElementById("btnSubmitLoginAuditoria");
+
+      if (errBox) {
+        errBox.style.display = "none";
+        errBox.innerText = "";
+      }
+
+      const usuario = userInput ? userInput.value.trim() : "";
+      const token = passInput ? passInput.value.trim() : "";
+      const remember = rememberCheckbox ? rememberCheckbox.checked : false;
+
+      if (!usuario) {
+        if (errBox) {
+          errBox.innerText = "Por favor ingresá tu nombre de usuario.";
+          errBox.style.display = "block";
+        }
+        if (userInput) userInput.focus();
+        return;
+      }
+
+      if (!token) {
+        if (errBox) {
+          errBox.innerText = "Por favor ingresá la clave de acceso.";
+          errBox.style.display = "block";
+        }
+        if (passInput) passInput.focus();
+        return;
+      }
+
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<span>⏳</span> Verificando...`;
+      }
+
+      showLoader("Verificando credenciales...", "Comprobando acceso al panel de auditoría");
+
+      try {
+        const testUrl = `${SCRIPT_URL}?action=buscarAsistenciaPersona&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}&persona=TEST_AUTH_CHECK&dispositivo=Web PWA`;
+        const response = await fetch(testUrl);
+        const responseText = await response.text();
+
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (pe) {
+          if (responseText.includes("Script Online")) {
+            throw new Error("El Google Apps Script aún no tiene publicado el endpoint de auditoría.\n\nPor favor pegá la versión actualizada en script.google.com y hacé clic en 'Nueva versión' al Implementar.");
+          }
+          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
+        }
+
+        if (data.success === false && (data.error && (data.error.toLowerCase().includes("clave") || data.error.toLowerCase().includes("autoriz") || data.error.toLowerCase().includes("token")))) {
+          throw new Error(data.error);
+        }
+
+        sesionAuditoriaActiva = {
+          token: token,
+          usuario: usuario
+        };
+
+        if (remember) {
+          saveSession(AUTH_STORAGE_KEYS.AUDITORIA, sesionAuditoriaActiva);
+        }
+        resetSobresInactivityTimer();
+
+        const badge = document.getElementById("sessionAuditoriaBadge");
+        if (badge) {
+          badge.innerHTML = `🛡️ Modo Auditoría <span style="font-size: 13px; font-weight: 600; color: #855913; background: #faefd4; padding: 2px 8px; border-radius: 6px;">👤 ${escapeHTML(usuario)}</span>`;
+        }
+
+        document.getElementById("auditoriaLoginGate").style.display = "none";
+        document.getElementById("auditoriaDashboard").style.display = "block";
+
+      } catch (err) {
+        if (errBox) {
+          errBox.innerText = err.message || "Clave de acceso incorrecta para auditoría.";
+          errBox.style.display = "block";
+        }
+      } finally {
+        hideLoader();
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = `<span>🛡️</span> Ingresar a Auditoría`;
+        }
+      }
+    }
+
+    function cerrarSesionAuditoria() {
+      removeSession(AUTH_STORAGE_KEYS.AUDITORIA);
+      sesionAuditoriaActiva = null;
+
+      const passInput = document.getElementById("loginAuditoriaPass");
+      if (passInput) passInput.value = "";
+
+      const userInput = document.getElementById("loginAuditoriaUsuario");
+      if (userInput) userInput.value = "";
+
+      const errBox = document.getElementById("auditoriaLoginError");
+      if (errBox) {
+        errBox.style.display = "none";
+        errBox.innerText = "";
+      }
+
+      const containerResultados = document.getElementById("auditoriaResultados");
+      if (containerResultados) containerResultados.innerHTML = "";
+
+      const inputBusqueda = document.getElementById("inputBuscarPersona");
+      if (inputBusqueda) inputBusqueda.value = "";
+
+      document.getElementById("auditoriaDashboard").style.display = "none";
+      document.getElementById("auditoriaLoginGate").style.display = "block";
+    }
+
+    async function ejecutarBusquedaPersona() {
+      if (!sesionAuditoriaActiva || !sesionAuditoriaActiva.token) {
+        alert("Tu sesión de auditoría no está activa. Por favor volvé a ingresar.");
+        cerrarSesionAuditoria();
+        return;
+      }
+
+      const inputPersona = document.getElementById("inputBuscarPersona");
+      const persona = inputPersona ? inputPersona.value.trim() : "";
+      const container = document.getElementById("auditoriaResultados");
+      const btnBuscar = document.getElementById("btnBuscarPersona");
+
+      if (!persona) {
+        alert("Por favor ingresá el nombre de la persona a buscar.");
+        if (inputPersona) inputPersona.focus();
+        return;
+      }
+
+      resetSobresInactivityTimer();
+
+      if (btnBuscar) {
+        btnBuscar.disabled = true;
+        btnBuscar.innerHTML = `<span>⏳</span> Buscando...`;
+      }
+
+      showLoader("Buscando asistencias...", "Consultando registros para: " + persona);
+
+      try {
+        const token = sesionAuditoriaActiva.token;
+        const usuario = sesionAuditoriaActiva.usuario || "Auditor";
+        const url = `${SCRIPT_URL}?action=buscarAsistenciaPersona&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}&persona=${encodeURIComponent(persona)}&dispositivo=Web PWA`;
+
+        const response = await fetch(url);
+        const responseText = await response.text();
+
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (pe) {
+          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
+        }
+
+        if (data.success === false) {
+          throw new Error(data.error || "No se pudo realizar la búsqueda.");
+        }
+
+        renderizarResultadoAuditoria(persona, data);
+
+      } catch (err) {
+        if (container) {
+          container.innerHTML = `
+            <div class="login-error-alert" style="display: block; margin-top: 14px;">
+              ❌ ${escapeHTML(err.message || "Error al realizar la consulta.")}
+            </div>
+          `;
+        }
+      } finally {
+        hideLoader();
+        if (btnBuscar) {
+          btnBuscar.disabled = false;
+          btnBuscar.innerHTML = `<span>🔍</span> Buscar`;
+        }
+      }
+    }
+
+    function renderizarResultadoAuditoria(personaBuscada, data) {
+      const container = document.getElementById("auditoriaResultados");
+      if (!container) return;
+
+      const nombrePersona = data.persona || personaBuscada;
+      const asistencias = data.asistencias || [];
+      const ausencias = data.ausencias || [];
+      const totalAsistencias = (typeof data.totalAsistencias === 'number') ? data.totalAsistencias : asistencias.length;
+      const totalAusencias = (typeof data.totalAusencias === 'number') ? data.totalAusencias : ausencias.length;
+
+      // Badge de última asistencia según las reglas del requerimiento
+      let badgeHtml = "";
+      if (data.ultimaAsistencia && (data.ultimaAsistencia.fechaEspiga || data.ultimaAsistencia.fecha || data.ultimaAsistencia.ministerio)) {
+        const fEspiga = data.ultimaAsistencia.fechaEspiga || data.ultimaAsistencia.fecha || "Sin fecha";
+        const min = data.ultimaAsistencia.ministerio || "Sin ministerio";
+        const lid = data.ultimaAsistencia.lider || "Sin líder";
+        badgeHtml = `
+          <div class="audit-status-badge audit-status-success">
+            ✅ Última asistencia registrada: <strong>${escapeHTML(fEspiga)}</strong> en <strong>${escapeHTML(min)}</strong> (Líder: ${escapeHTML(lid)})
+          </div>
+        `;
+      } else if (totalAsistencias === 0 && totalAusencias > 0) {
+        badgeHtml = `
+          <div class="audit-status-badge audit-status-warning">
+            ⚠️ Sin asistencias confirmadas recientes. Registra ausencias reportadas.
+          </div>
+        `;
+      } else if (totalAsistencias === 0 && totalAusencias === 0) {
+        badgeHtml = `
+          <div class="audit-status-badge audit-status-info">
+            ℹ️ No se encontraron registros de espigas para este nombre.
+          </div>
+        `;
+      } else if (asistencias.length > 0) {
+        const pri = asistencias[0];
+        const fEspiga = pri.fechaEspiga || pri.fecha || "Sin fecha";
+        const min = pri.ministerio || "Sin ministerio";
+        const lid = pri.lider || "Sin líder";
+        badgeHtml = `
+          <div class="audit-status-badge audit-status-success">
+            ✅ Última asistencia registrada: <strong>${escapeHTML(fEspiga)}</strong> en <strong>${escapeHTML(min)}</strong> (Líder: ${escapeHTML(lid)})
+          </div>
+        `;
+      } else {
+        badgeHtml = `
+          <div class="audit-status-badge audit-status-info">
+            ℹ️ No se encontraron registros de espigas para este nombre.
+          </div>
+        `;
+      }
+
+      // Lista de asistencias históricas
+      let asistenciasHtml = "";
+      if (asistencias.length > 0) {
+        asistenciasHtml = `
+          <div style="margin-top: 20px;">
+            <div class="audit-section-title">
+              <span>✅ Asistencias a Espigas (${asistencias.length})</span>
+              <button type="button" class="btn btn-outline btn-sm" onclick="toggleAuditSection('auditAsistenciasList')">
+                Alternar lista
+              </button>
+            </div>
+            <div id="auditAsistenciasList">
+              ${asistencias.map((a, idx) => `
+                <div class="audit-item-card">
+                  <div class="audit-item-header">
+                    <span class="prayer-ministry-badge">🏛️ ${escapeHTML(a.ministerio || "-")}</span>
+                    <span class="record-date-badge"><span>📅</span> ${escapeHTML(a.fechaEspiga || a.fecha || "-")}</span>
+                  </div>
+                  <div class="audit-item-grid">
+                    <div><strong>Líder:</strong> 👤 ${escapeHTML(a.lider || "-")}</div>
+                    <div><strong>Mentor:</strong> 🛡️ ${escapeHTML(a.mentor || "-")}</div>
+                    ${a.contexto || a.asistentes ? `
+                      <div style="grid-column: 1 / -1; margin-top: 4px; color: var(--muted); font-size: 12.5px;">
+                        <strong>Contexto:</strong> ${escapeHTML(a.contexto || a.asistentes)}
+                      </div>
+                    ` : ""}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      } else {
+        asistenciasHtml = `
+          <div style="padding: 14px; background: #f8fafc; border: 1px dashed var(--border); border-radius: 10px; margin-top: 16px; font-size: 13.5px; color: var(--muted); text-align: center;">
+            No se encontraron asistencias registradas para esta persona.
+          </div>
+        `;
+      }
+
+      // Lista de ausencias reportadas
+      let ausenciasHtml = "";
+      if (ausencias.length > 0) {
+        ausenciasHtml = `
+          <div style="margin-top: 24px;">
+            <div class="audit-section-title">
+              <span style="color: #b45309;">⚠️ Ausencias Reportadas (${ausencias.length})</span>
+              <button type="button" class="btn btn-outline btn-sm" onclick="toggleAuditSection('auditAusenciasList')">
+                Alternar lista
+              </button>
+            </div>
+            <div id="auditAusenciasList">
+              ${ausencias.map((au, idx) => `
+                <div class="audit-item-card" style="border-left: 4px solid #f59e0b;">
+                  <div class="audit-item-header">
+                    <span class="prayer-ministry-badge" style="background: #fffbeb; color: #b45309; border-color: #fde68a;">🏛️ ${escapeHTML(au.ministerio || "-")}</span>
+                    <span class="record-date-badge"><span>📅</span> ${escapeHTML(au.fechaEspiga || au.fecha || "-")}</span>
+                  </div>
+                  <div class="audit-item-grid">
+                    <div><strong>Líder:</strong> 👤 ${escapeHTML(au.lider || "-")}</div>
+                    <div style="grid-column: 1 / -1; margin-top: 4px; background: #fffbeb; padding: 8px 12px; border-radius: 8px; border: 1px solid #fef3c7;">
+                      <strong style="color: #92400e;">Motivo de ausencia:</strong> ${escapeHTML(au.motivo || au.motivoAusencia || au.detalle || "Sin motivo indicado")}
+                    </div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="audit-person-card">
+          <div class="audit-person-header">
+            <div class="audit-person-name">
+              <span>👤</span> ${escapeHTML(nombrePersona)}
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('inputBuscarPersona').focus(); window.scrollTo(0, 0);">
+              🔍 Buscar otra persona
+            </button>
+          </div>
+
+          ${badgeHtml}
+
+          <div class="audit-metrics-row">
+            <div class="audit-metric-box asistencias">
+              <div class="metric-num">${totalAsistencias}</div>
+              <div class="metric-lbl">Espigas Asistidas</div>
+            </div>
+            <div class="audit-metric-box ausencias">
+              <div class="metric-num">${totalAusencias}</div>
+              <div class="metric-lbl">Ausencias Reportadas</div>
+            </div>
+          </div>
+
+          ${asistenciasHtml}
+          ${ausenciasHtml}
+        </div>
+      `;
+    }
+
+    function toggleAuditSection(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+      }
     }
 
     // Helpers
