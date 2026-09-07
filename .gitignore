@@ -11,4 +11,5 @@ ExtraerFechas.txt
 .vercel
 node_modules/
 .gemini/
+.agents/
 .env*

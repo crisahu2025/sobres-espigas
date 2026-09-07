@@ -1,7 +1,8 @@
-﻿# Google Apps Script & Backend Server Scripts
+# Google Apps Script & Backend Server Scripts
 *.gs
 *APPS-SCRIPT*
 *bot_logic*
 *Script*.txt
 *.txt
 .gemini/
+.agents/
