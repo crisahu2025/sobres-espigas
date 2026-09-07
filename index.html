@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="manifest" href="manifest.json?v=1.0.1" />
+  <link rel="manifest" href="manifest.json?v=1.0.2" />
   <meta name="theme-color" content="#1d1a18" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -1919,7 +1919,7 @@
 
   <script>
     // ===== URL DE CONEXIÓN CON GOOGLE APPS SCRIPT =====
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzGHvgjF_SWSD43PJkVsEQCskhGuE5qN96Kt16AbqUF4BpNaHNWkLLdfYmRZahHcPc4/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXZ_u0hXS22owVMZBbdMYW_igNNQqGb7CWTjYm7OMHW5GGuA3GmnIfFCtzHDu9mwHi/exec";
 
     const MESES_ES = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -2042,7 +2042,7 @@
 
       // Registro de Service Worker para PWA y control de actualización
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=1.0.1').then(reg => {
+        navigator.serviceWorker.register('./sw.js?v=1.0.2').then(reg => {
           navigator.serviceWorker.addEventListener('controllerchange', () => {
             window.location.reload();
           });
