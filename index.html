@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="manifest" href="manifest.json?v=1.0.4" />
+  <link rel="manifest" href="manifest.json?v=1.0.5" />
   <meta name="theme-color" content="#1d1a18" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -90,6 +90,13 @@
       gap: 16px;
     }
 
+    .nav-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
     .nav-brand {
       display: flex;
       align-items: center;
@@ -98,6 +105,7 @@
       flex-shrink: 0;
       cursor: pointer;
       user-select: none;
+      -webkit-user-select: none;
     }
 
     .nav-logo {
@@ -113,12 +121,27 @@
       line-height: 1.15;
     }
 
+    .nav-brand-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .nav-brand-title {
       font-family: 'Outfit', sans-serif;
       font-size: 15px;
       font-weight: 800;
       color: #ffffff;
       letter-spacing: 0.5px;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #22c55e;
+      display: inline-block;
     }
 
     .nav-brand-subtitle {
@@ -154,6 +177,16 @@
       transition: all 0.2s ease;
       font-family: var(--font-sans);
       white-space: nowrap;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .tab-btn .tab-text-short {
+      display: none;
+    }
+
+    .tab-btn .tab-text-full {
+      display: inline;
     }
 
     .tab-btn.active {
@@ -165,6 +198,10 @@
     .tab-btn:hover:not(.active) {
       background: rgba(255, 255, 255, 0.12);
       color: #ffffff;
+    }
+
+    .tab-btn:active {
+      transform: scale(0.97);
     }
 
     .nav-actions {
@@ -197,40 +234,50 @@
       box-shadow: 0 4px 12px rgba(222, 188, 116, 0.5);
     }
 
+    /* ESTILO APP MOVIL TIPO IGR KIDS (CERO DESLIZAMIENTO) */
     @media (max-width: 860px) {
       .nav-inner {
-        flex-wrap: wrap;
-        padding: 8px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 8px 14px 10px;
         gap: 8px;
       }
 
-      .nav-brand {
-        order: 1;
-      }
-
-      .nav-actions {
-        order: 2;
+      .nav-top-bar {
+        width: 100%;
       }
 
       .nav-links {
-        order: 3;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        justify-content: flex-start;
+        overflow: hidden; /* CERO DESLIZAMIENTO */
         padding: 4px;
+        gap: 4px;
+        border-radius: 14px;
+        box-sizing: border-box;
       }
 
-      .nav-links::-webkit-scrollbar {
+      .tab-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 4px;
+        font-size: 12px;
+        border-radius: 10px;
+        text-align: center;
+        width: 100%;
+        gap: 4px;
+        box-sizing: border-box;
+        white-space: nowrap;
+      }
+
+      .tab-btn .tab-text-full {
         display: none;
       }
 
-      .nav-links .tab-btn {
-        padding: 7px 14px;
-        font-size: 13px;
-        flex-shrink: 0;
+      .tab-btn .tab-text-short {
+        display: inline;
       }
     }
 
@@ -1390,31 +1437,43 @@
   </div>
 
   <!-- Barra de Navegación Superior Fija (Sticky Navbar) -->
+  <!-- Barra de Navegación Superior Fija (Sticky Navbar) Estilo IGR KIDS -->
   <nav class="app-navbar">
     <div class="nav-inner">
-      <a href="javascript:void(0)" class="nav-brand" onclick="switchAppTab('cargar')" title="Iglesia Gran Rey">
-        <img src="escudo.png" alt="Escudo Iglesia Gran Rey" class="nav-logo" />
-        <div class="nav-brand-text">
-          <span class="nav-brand-title">IGLESIA GRAN REY</span>
-          <span class="nav-brand-subtitle">Sobres de Espigas</span>
+      <div class="nav-top-bar">
+        <a href="javascript:void(0)" class="nav-brand" onclick="switchAppTab('cargar')" title="Iglesia Gran Rey">
+          <img src="escudo.png" alt="Escudo Iglesia Gran Rey" class="nav-logo" />
+          <div class="nav-brand-text">
+            <div class="nav-brand-header">
+              <span class="nav-brand-title">IGLESIA GRAN REY</span>
+              <span class="online-dot" title="En línea"></span>
+            </div>
+            <span class="nav-brand-subtitle">Sobres de Espigas</span>
+          </div>
+        </a>
+
+        <div class="nav-actions">
+          <button id="btnInstallPwa" class="btn-pwa-install" style="display: none;" type="button">
+            📱 Instalar App
+          </button>
         </div>
-      </a>
+      </div>
 
       <div class="nav-links">
         <button class="tab-btn active" id="tabCargarBtn" onclick="switchAppTab('cargar')">
-          <span>📝</span> Cargar Sobre
+          <span>📝</span>
+          <span class="tab-text-full">Cargar Sobre</span>
+          <span class="tab-text-short">Cargar</span>
         </button>
         <button class="tab-btn" id="tabConsultarBtn" onclick="switchAppTab('consultar')">
-          <span>🔍</span> Consultar Historial
+          <span>🔍</span>
+          <span class="tab-text-full">Consultar Historial</span>
+          <span class="tab-text-short">Historial</span>
         </button>
         <button class="tab-btn" id="tabOracionBtn" onclick="switchAppTab('oracion')">
-          <span>🕊️</span> Motivos de Oración
-        </button>
-      </div>
-
-      <div class="nav-actions">
-        <button id="btnInstallPwa" class="btn-pwa-install" style="display: none;" type="button">
-          📱 Instalar App
+          <span>🕊️</span>
+          <span class="tab-text-full">Motivos de Oración</span>
+          <span class="tab-text-short">Oración</span>
         </button>
       </div>
     </div>
@@ -2025,7 +2084,7 @@
 
       // Registro de Service Worker para PWA y control de actualización
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=1.0.4').then(reg => {
+        navigator.serviceWorker.register('./sw.js?v=1.0.5').then(reg => {
           navigator.serviceWorker.addEventListener('controllerchange', () => {
             window.location.reload();
           });
