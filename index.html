@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="manifest" href="manifest.json?v=1.0.7" />
+  <link rel="manifest" href="manifest.json?v=1.0.8" />
   <meta name="theme-color" content="#1d1a18" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -886,6 +886,7 @@
 
     .photo-modal-content {
       position: relative;
+      min-width: 300px;
       max-width: 90vw;
       max-height: 90vh;
       background: #fff;
@@ -893,6 +894,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
     }
 
     .photo-modal-header {
@@ -1508,10 +1510,36 @@
     <div class="photo-modal-content" onclick="event.stopPropagation()">
       <div class="photo-modal-header">
         <span style="font-weight: 700; font-size: 14px;" id="modalTitle">Foto del Sobre</span>
-        <button class="close-modal-btn" onclick="closePhotoModal()">&times;</button>
+        <button type="button" class="close-modal-btn" onclick="closePhotoModal()" aria-label="Cerrar">&times;</button>
       </div>
-      <img id="modalImage" src="" alt="Sobre de Espiga" />
-      <div style="padding: 10px 16px; text-align: right; background: #f8fafc;">
+
+      <!-- Spinner de Carga Protegida -->
+      <div id="modalPhotoLoader" style="display: none; padding: 48px 24px; text-align: center; flex-direction: column; align-items: center; justify-content: center; min-height: 220px; gap: 10px;">
+        <div class="spinner" style="width: 42px; height: 42px; border-width: 3px; margin: 0 auto 10px auto;"></div>
+        <div style="font-size: 14px; font-weight: 700; color: var(--primary);">Cargando imagen protegida...</div>
+        <div style="font-size: 12px; color: var(--muted);">Validando credenciales seguras con el servidor</div>
+      </div>
+
+      <!-- Fallback de Error Elegante -->
+      <div id="modalPhotoError" style="display: none; padding: 36px 20px; text-align: center; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; gap: 10px;">
+        <div style="font-size: 34px;">🔒</div>
+        <div style="font-size: 15px; font-weight: 700; color: #dc2626;">No se pudo previsualizar la foto protegida</div>
+        <p id="modalPhotoErrorDesc" style="font-size: 13px; color: var(--muted); max-width: 320px; margin: 0 auto 8px auto;">
+          La imagen se encuentra resguardada en Google Drive con permisos estrictos.
+        </p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 4px;">
+          <a id="modalErrorDriveLink" href="#" target="_blank" class="btn btn-primary btn-sm">Abrir en Google Drive ↗</a>
+        </div>
+      </div>
+
+      <!-- Imagen -->
+      <img id="modalImage" src="" alt="Sobre de Espiga" style="display: none;" />
+
+      <!-- Footer -->
+      <div id="modalPhotoFooter" style="padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+        <span style="font-size: 12px; color: #166534; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" id="modalPhotoSecurityTag">
+          🛡️ Conexión Segura
+        </span>
         <a id="modalOpenTab" href="#" target="_blank" class="btn btn-outline btn-sm">Abrir en pestaña nueva ↗</a>
       </div>
     </div>
@@ -1985,7 +2013,7 @@
 
   <script>
     // ===== URL DE CONEXIÓN CON GOOGLE APPS SCRIPT =====
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRhWqciCgbldbbo7nMguRdHfLq7tn-WTfDRjsYW-0-PAtjkgvlOuKjbJwPhSaxwtMH/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMt9wdCL4G10znTT-Hocn7kJb48AjcremPTsl6roc7AJuSOe1Hnh2vmu3qkuc7zqwb/exec";
 
     const MESES_ES = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -2108,7 +2136,7 @@
 
       // Registro de Service Worker para PWA y control de actualización
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=1.0.7').then(reg => {
+        navigator.serviceWorker.register('./sw.js?v=1.0.8').then(reg => {
           navigator.serviceWorker.addEventListener('controllerchange', () => {
             window.location.reload();
           });
@@ -2849,8 +2877,9 @@
             ? "confirmado" 
             : "pendiente";
 
-          const fotoBtn = (esUsuarioMaster && r.fotoUrl && r.fotoUrl.startsWith("http"))
-            ? `<button class="btn btn-outline btn-sm" onclick="openPhotoModal('${escapeHTML(r.fotoUrl)}', 'Sobre de ${escapeHTML(r.lider)}')">📷 Ver Foto</button>`
+          const tieneFotoValida = r.fotoUrl && (r.fotoUrl.startsWith("http") || r.fotoUrl.includes("drive.google.com") || r.fotoUrl.trim().length >= 25);
+          const fotoBtn = (esUsuarioMaster && tieneFotoValida)
+            ? `<button type="button" class="btn btn-outline btn-sm" onclick="openPhotoModal(this.dataset.url, this.dataset.titulo)" data-url="${escapeHTML(r.fotoUrl)}" data-titulo="Sobre de ${escapeHTML(r.lider || 'Líder')}">📷 Ver Foto</button>`
             : "";
 
           const fechaEspigaFormateada = formatearFechaLegible(r.fechaEspiga || r.fechaHora);
@@ -2980,27 +3009,172 @@
       renderizarHistorial(filtrados);
     }
 
-    // Modal de Foto
-    function openPhotoModal(url, titulo) {
+    // Modal de Foto Protegido con Endpoint Seguro y Fallback Elegante
+    let currentPhotoModalReqId = 0;
+
+    async function openPhotoModal(url, titulo) {
+      const reqId = ++currentPhotoModalReqId;
       document.getElementById("modalTitle").innerText = titulo || "Foto del Sobre";
-      
-      let previewUrl = url;
-      if (url.includes("drive.google.com")) {
+
+      const modal = document.getElementById("photoModal");
+      const modalImg = document.getElementById("modalImage");
+      const loader = document.getElementById("modalPhotoLoader");
+      const errorBox = document.getElementById("modalPhotoError");
+      const errorDesc = document.getElementById("modalPhotoErrorDesc");
+      const errorDriveLink = document.getElementById("modalErrorDriveLink");
+      const modalOpenTab = document.getElementById("modalOpenTab");
+      const securityTag = document.getElementById("modalPhotoSecurityTag");
+
+      // Resetear estado visual
+      modalImg.src = "";
+      modalImg.style.display = "none";
+      if (errorBox) errorBox.style.display = "none";
+      if (loader) loader.style.display = "flex";
+      if (modalOpenTab) {
+        modalOpenTab.href = url || "#";
+        modalOpenTab.style.pointerEvents = "none";
+        modalOpenTab.style.opacity = "0.6";
+      }
+      if (errorDriveLink) {
+        errorDriveLink.href = url || "#";
+      }
+      if (securityTag) {
+        securityTag.innerHTML = esUsuarioMaster ? "👑 Autorización Master Activa" : "🛡️ Acceso Seguro";
+      }
+
+      modal.style.display = "flex";
+
+      // Extraer Google Drive fileId si existe
+      let fileId = null;
+      if (url) {
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
         if (match && match[1]) {
-          previewUrl = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+          fileId = match[1];
+        } else if (/^[a-zA-Z0-9_-]{20,}$/.test(url.trim())) {
+          fileId = url.trim();
         }
       }
 
-      document.getElementById("modalImage").src = previewUrl;
-      document.getElementById("modalOpenTab").href = url;
-      document.getElementById("photoModal").style.display = "flex";
+      const token = (esUsuarioMaster && sesionHistorialActiva && sesionHistorialActiva.token)
+        ? sesionHistorialActiva.token
+        : ((sesionAuditoriaActiva && sesionAuditoriaActiva.token) ? sesionAuditoriaActiva.token : "");
+      const usuario = (sesionHistorialActiva && sesionHistorialActiva.usuario)
+        ? sesionHistorialActiva.usuario
+        : ((sesionAuditoriaActiva && sesionAuditoriaActiva.usuario) ? sesionAuditoriaActiva.usuario : "Admin");
+
+      // Si es usuario Master y tenemos fileId, solicitar foto protegida mediante backend
+      if (esUsuarioMaster && token && fileId) {
+        try {
+          const reqUrl = `${SCRIPT_URL}?action=getFotoSobre&fileId=${encodeURIComponent(fileId)}&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}`;
+          const res = await fetch(reqUrl);
+          const data = await res.json();
+
+          if (reqId !== currentPhotoModalReqId) return; // Se abrió otro sobre o se cerró
+
+          if (!data.success) {
+            throw new Error(data.error || "No se pudo obtener la imagen protegida del servidor.");
+          }
+
+          const rawBase64 = data.base64 || data.fotoBase64 || data.data || data.imagen;
+          if (!rawBase64) {
+            throw new Error("El servidor no devolvió el contenido base64 de la imagen.");
+          }
+
+          const mime = data.mimeType || "image/jpeg";
+          const dataUrl = rawBase64.startsWith("data:") ? rawBase64 : `data:${mime};base64,${rawBase64}`;
+
+          modalImg.onload = () => {
+            if (reqId !== currentPhotoModalReqId) return;
+            if (loader) loader.style.display = "none";
+            modalImg.style.display = "block";
+            if (modalOpenTab) {
+              modalOpenTab.href = dataUrl;
+              modalOpenTab.style.pointerEvents = "auto";
+              modalOpenTab.style.opacity = "1";
+            }
+          };
+          modalImg.onerror = () => {
+            if (reqId !== currentPhotoModalReqId) return;
+            triggerPhotoFallback(url, fileId, "Error al procesar los datos de la imagen protegida.");
+          };
+          modalImg.src = dataUrl;
+          return;
+
+        } catch (fetchErr) {
+          console.warn("Fallo al obtener foto mediante endpoint getFotoSobre, probando fallback:", fetchErr);
+          if (reqId !== currentPhotoModalReqId) return;
+          triggerPhotoFallback(url, fileId, fetchErr.message);
+          return;
+        }
+      }
+
+      // Flujo de fallback o acceso directo si no es Master o no hay fileId
+      triggerPhotoFallback(url, fileId);
+
+      function triggerPhotoFallback(originalUrl, fId, errorMsg) {
+        if (reqId !== currentPhotoModalReqId) return;
+        const previewUrl = fId ? `https://drive.google.com/thumbnail?id=${fId}&sz=w1000` : originalUrl;
+
+        const testImg = new Image();
+        testImg.onload = () => {
+          if (reqId !== currentPhotoModalReqId) return;
+          if (loader) loader.style.display = "none";
+          modalImg.src = previewUrl;
+          modalImg.style.display = "block";
+          if (modalOpenTab) {
+            modalOpenTab.href = originalUrl;
+            modalOpenTab.style.pointerEvents = "auto";
+            modalOpenTab.style.opacity = "1";
+          }
+        };
+        testImg.onerror = () => {
+          if (reqId !== currentPhotoModalReqId) return;
+          if (loader) loader.style.display = "none";
+          modalImg.style.display = "none";
+          if (errorBox) errorBox.style.display = "flex";
+          if (errorDesc) {
+            errorDesc.innerText = errorMsg || "El archivo requiere permisos directos en Google Drive para visualizarse.";
+          }
+          if (errorDriveLink) {
+            errorDriveLink.href = originalUrl;
+          }
+          if (modalOpenTab) {
+            modalOpenTab.href = originalUrl;
+            modalOpenTab.style.pointerEvents = "auto";
+            modalOpenTab.style.opacity = "1";
+          }
+        };
+        testImg.src = previewUrl;
+      }
     }
 
-    function closePhotoModal() {
-      document.getElementById("photoModal").style.display = "none";
-      document.getElementById("modalImage").src = "";
+    function closePhotoModal(e) {
+      if (e && e.target && e.target.id !== "photoModal" && !e.target.classList.contains("close-modal-btn")) {
+        return;
+      }
+      currentPhotoModalReqId++;
+      const modal = document.getElementById("photoModal");
+      if (modal) modal.style.display = "none";
+      const modalImg = document.getElementById("modalImage");
+      if (modalImg) {
+        modalImg.src = "";
+        modalImg.style.display = "none";
+      }
+      const loader = document.getElementById("modalPhotoLoader");
+      if (loader) loader.style.display = "none";
+      const errorBox = document.getElementById("modalPhotoError");
+      if (errorBox) errorBox.style.display = "none";
     }
+
+    // Cerrar modal con tecla Escape
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" || e.keyCode === 27) {
+        const modal = document.getElementById("photoModal");
+        if (modal && modal.style.display === "flex") {
+          closePhotoModal();
+        }
+      }
+    });
 
     // ==========================================
     // FUNCIONES DE LOGIN Y MOTIVOS DE ORACIÓN
@@ -3484,8 +3658,13 @@
           throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
         }
 
-        if (data.success === false && (data.error && (data.error.toLowerCase().includes("clave") || data.error.toLowerCase().includes("autoriz") || data.error.toLowerCase().includes("token")))) {
-          throw new Error(data.error);
+        // Interpretación inmediata de respuesta authCheck del backend
+        if (data.success === false) {
+          throw new Error(data.error || "Clave de acceso incorrecta para el panel de auditoría.");
+        }
+
+        if (data.authCheck !== true && data.success !== true) {
+          throw new Error("No se pudo comprobar la autorización de auditoría.");
         }
 
         sesionAuditoriaActiva = {
