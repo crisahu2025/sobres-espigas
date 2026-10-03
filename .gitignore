@@ -6,6 +6,11 @@
 *.txt
 Codigo de appscript pagina web.txt
 ExtraerFechas.txt
+Código.js
+ExtraerFechas.js
+appsscript.json
+.clasp.json
+.claspignore
 
 # Deploy & Environment
 .vercel

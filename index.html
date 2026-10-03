@@ -2013,7 +2013,7 @@
 
   <script>
     // ===== URL DE CONEXIÓN CON GOOGLE APPS SCRIPT =====
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMt9wdCL4G10znTT-Hocn7kJb48AjcremPTsl6roc7AJuSOe1Hnh2vmu3qkuc7zqwb/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRhWqciCgbldbbo7nMguRdHfLq7tn-WTfDRjsYW-0-PAtjkgvlOuKjbJwPhSaxwtMH/exec";
 
     const MESES_ES = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -2136,7 +2136,7 @@
 
       // Registro de Service Worker para PWA y control de actualización
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=1.0.8').then(reg => {
+        navigator.serviceWorker.register('./sw.js?v=1.0.9').then(reg => {
           navigator.serviceWorker.addEventListener('controllerchange', () => {
             window.location.reload();
           });
