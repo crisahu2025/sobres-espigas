@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="manifest" href="manifest.json?v=1.0.8" />
+  <link rel="manifest" href="manifest.json?v=1.1.0" />
   <meta name="theme-color" content="#1d1a18" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -2136,7 +2136,7 @@
 
       // Registro de Service Worker para PWA y control de actualización
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=1.0.9').then(reg => {
+        navigator.serviceWorker.register('./sw.js?v=1.1.0').then(reg => {
           navigator.serviceWorker.addEventListener('controllerchange', () => {
             window.location.reload();
           });
@@ -2144,6 +2144,34 @@
           console.warn('SW no registrado:', err);
         });
       }
+    }
+
+    async function postSobresApi(payload) {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      const responseText = await response.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseErr) {
+        if (responseText.includes("Script Online")) {
+          throw new Error("El Google Apps Script aún tiene la versión anterior instalada en Google Drive.\n\nPor favor pegá el código actualizado en script.google.com y hacé clic en 'Nueva versión' al Implementar.");
+        }
+        throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
+      }
+      return data;
+    }
+
+    function sanitizeUrl(url) {
+      if (!url) return "#";
+      const trimmed = String(url).trim();
+      if (/^https?:\/\//i.test(trimmed) || /^data:image\//i.test(trimmed)) {
+        return trimmed;
+      }
+      return "#";
     }
 
     // Inicializar al cargar la página
@@ -2359,6 +2387,8 @@
       const fechaEspigaRaw = document.getElementById("fechaEspiga").value;
       const [anio, mes, dia] = fechaEspigaRaw ? fechaEspigaRaw.split('-') : ['-', '-', '-'];
       const fechaEspigaFormateada = dia && mes && anio ? `${dia}/${mes}/${anio}` : '-';
+      const safeMime = /^image\/[a-zA-Z0-9.+-]+$/.test(currentData.fotoMimeType || "") ? currentData.fotoMimeType : "image/jpeg";
+      const safeBase64 = (currentData.fotoBase64 || "").replace(/[^A-Za-z0-9+/=]/g, "");
 
       const html = `
         <div class="summary-item"><div class="summary-label">Ministerio</div><div class="summary-value">${escapeHTML(document.getElementById("ministerio").value)}</div></div>
@@ -2371,7 +2401,7 @@
         <div class="summary-item"><div class="summary-label">Ofrenda</div><div class="summary-value">$${escapeHTML(document.getElementById("ofrenda").value)}</div></div>
         <div class="summary-item">
           <div class="summary-label">Foto Adjunta</div>
-          <img src="data:${currentData.fotoMimeType};base64,${currentData.fotoBase64}" style="max-width: 120px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border);" />
+          <img src="data:${safeMime};base64,${safeBase64}" style="max-width: 120px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border);" />
         </div>
       `;
       document.getElementById("summaryBox").innerHTML = html;
@@ -2456,7 +2486,7 @@
 
       const ministerio = minSelect ? minSelect.value : "";
       const usuario = userInput ? userInput.value.trim() : "";
-      const token = passInput ? passInput.value.trim() : "";
+      const claveIngresada = passInput ? passInput.value.trim() : "";
       const remember = rememberCheckbox ? rememberCheckbox.checked : false;
 
       if (!ministerio) {
@@ -2477,7 +2507,7 @@
         return;
       }
 
-      if (!token) {
+      if (!claveIngresada) {
         if (errBox) {
           errBox.innerText = "Por favor ingresa la clave de acceso.";
           errBox.style.display = "block";
@@ -2491,9 +2521,25 @@
         btnSubmit.innerHTML = `<span>⏳</span> Verificando...`;
       }
 
+      showLoader("Iniciando sesión...", "Verificando credenciales de " + ministerio);
+
       try {
-        await ejecutarCargaHistorial(ministerio, token, usuario, true, remember);
+        const loginData = await postSobresApi({
+          action: "loginSobres",
+          scope: "historial",
+          ministerio: ministerio,
+          password: claveIngresada,
+          usuario: usuario,
+          dispositivo: "Web PWA"
+        });
+
+        if (loginData.authError || !loginData.success || !loginData.token) {
+          throw new Error(loginData.error || "Clave de acceso incorrecta para el ministerio seleccionado.");
+        }
+
+        await ejecutarCargaHistorial(ministerio, loginData.token, usuario, true, remember);
       } catch (err) {
+        hideLoader();
         if (errBox) {
           errBox.innerText = err.message || "Clave de acceso incorrecta para el ministerio seleccionado.";
           errBox.style.display = "block";
@@ -2512,21 +2558,20 @@
       }
 
       try {
-        const queryUrl = `${SCRIPT_URL}?action=getHistorial&token=${encodeURIComponent(token)}&ministerio=${encodeURIComponent(ministerio)}&usuario=${encodeURIComponent(usuario)}&lider=TODOS`;
-        const response = await fetch(queryUrl);
-        const responseText = await response.text();
-        
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (parseErr) {
-          if (responseText.includes("Script Online")) {
-            throw new Error("El Google Apps Script aún tiene la versión anterior instalada en Google Drive.\n\nPor favor pegá el código actualizado en script.google.com y hacé clic en 'Nueva versión' al Implementar.");
-          }
-          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
-        }
+        const data = await postSobresApi({
+          action: "getHistorial",
+          token: token,
+          ministerio: ministerio,
+          usuario: usuario,
+          lider: "TODOS"
+        });
 
         if (mostrarLoader) hideLoader();
+
+        if (data.authError) {
+          cerrarSesionHistorial(false);
+          throw new Error(data.error || "Sesión expirada o no autorizada. Por favor ingresá nuevamente.");
+        }
 
         if (data.error) {
           throw new Error(data.error);
@@ -3025,18 +3070,20 @@
       const modalOpenTab = document.getElementById("modalOpenTab");
       const securityTag = document.getElementById("modalPhotoSecurityTag");
 
+      const safeOriginalUrl = sanitizeUrl(url);
+
       // Resetear estado visual
       modalImg.src = "";
       modalImg.style.display = "none";
       if (errorBox) errorBox.style.display = "none";
       if (loader) loader.style.display = "flex";
       if (modalOpenTab) {
-        modalOpenTab.href = url || "#";
+        modalOpenTab.href = safeOriginalUrl;
         modalOpenTab.style.pointerEvents = "none";
         modalOpenTab.style.opacity = "0.6";
       }
       if (errorDriveLink) {
-        errorDriveLink.href = url || "#";
+        errorDriveLink.href = safeOriginalUrl;
       }
       if (securityTag) {
         securityTag.innerHTML = esUsuarioMaster ? "👑 Autorización Master Activa" : "🛡️ Acceso Seguro";
@@ -3062,14 +3109,25 @@
         ? sesionHistorialActiva.usuario
         : ((sesionAuditoriaActiva && sesionAuditoriaActiva.usuario) ? sesionAuditoriaActiva.usuario : "Admin");
 
-      // Si es usuario Master y tenemos fileId, solicitar foto protegida mediante backend
+      // Si es usuario Master y tenemos fileId, solicitar foto protegida mediante backend (POST)
       if (esUsuarioMaster && token && fileId) {
         try {
-          const reqUrl = `${SCRIPT_URL}?action=getFotoSobre&fileId=${encodeURIComponent(fileId)}&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}`;
-          const res = await fetch(reqUrl);
-          const data = await res.json();
+          const data = await postSobresApi({
+            action: "getFotoSobre",
+            fileId: fileId,
+            token: token,
+            usuario: usuario
+          });
 
           if (reqId !== currentPhotoModalReqId) return; // Se abrió otro sobre o se cerró
+
+          if (data.authError) {
+            closePhotoModal();
+            if (sesionHistorialActiva) cerrarSesionHistorial(false);
+            if (sesionAuditoriaActiva) cerrarSesionAuditoria();
+            alert(data.error || "Tu sesión expiró. Por favor iniciá sesión nuevamente.");
+            return;
+          }
 
           if (!data.success) {
             throw new Error(data.error || "No se pudo obtener la imagen protegida del servidor.");
@@ -3109,11 +3167,11 @@
       }
 
       // Flujo de fallback o acceso directo si no es Master o no hay fileId
-      triggerPhotoFallback(url, fileId);
+      triggerPhotoFallback(safeOriginalUrl, fileId);
 
       function triggerPhotoFallback(originalUrl, fId, errorMsg) {
         if (reqId !== currentPhotoModalReqId) return;
-        const previewUrl = fId ? `https://drive.google.com/thumbnail?id=${fId}&sz=w1000` : originalUrl;
+        const previewUrl = fId ? `https://drive.google.com/thumbnail?id=${encodeURIComponent(fId)}&sz=w1000` : originalUrl;
 
         const testImg = new Image();
         testImg.onload = () => {
@@ -3192,7 +3250,7 @@
       }
 
       const usuario = userInput ? userInput.value.trim() : "";
-      const token = passInput ? passInput.value.trim() : "";
+      const claveIngresada = passInput ? passInput.value.trim() : "";
       const remember = rememberCheckbox ? rememberCheckbox.checked : false;
 
       if (!usuario) {
@@ -3204,7 +3262,7 @@
         return;
       }
 
-      if (!token) {
+      if (!claveIngresada) {
         if (errBox) {
           errBox.innerText = "Por favor ingresa la clave de acceso a oración.";
           errBox.style.display = "block";
@@ -3218,9 +3276,25 @@
         btnSubmit.innerHTML = `<span>⏳</span> Verificando...`;
       }
 
+      showLoader("Iniciando sesión...", "Verificando acceso al área de intercesión");
+
       try {
-        await ejecutarCargaOracion(token, usuario, true, remember);
+        const loginData = await postSobresApi({
+          action: "loginSobres",
+          scope: "oracion",
+          ministerio: "",
+          password: claveIngresada,
+          usuario: usuario,
+          dispositivo: "Web PWA"
+        });
+
+        if (loginData.authError || !loginData.success || !loginData.token) {
+          throw new Error(loginData.error || "Clave de acceso incorrecta para el área de oración.");
+        }
+
+        await ejecutarCargaOracion(loginData.token, usuario, true, remember);
       } catch (err) {
+        hideLoader();
         if (errBox) {
           errBox.innerText = err.message || "Clave de acceso incorrecta para el área de oración.";
           errBox.style.display = "block";
@@ -3239,21 +3313,18 @@
       }
 
       try {
-        const queryUrl = `${SCRIPT_URL}?action=getMotivosOracion&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}`;
-        const response = await fetch(queryUrl);
-        const responseText = await response.text();
-
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (parseErr) {
-          if (responseText.includes("Script Online")) {
-            throw new Error("El Google Apps Script aún no tiene implementado el endpoint de oración.\n\nPor favor pegá el código actualizado en script.google.com y hacé clic en 'Nueva versión' al Implementar.");
-          }
-          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
-        }
+        const data = await postSobresApi({
+          action: "getMotivosOracion",
+          token: token,
+          usuario: usuario
+        });
 
         if (mostrarLoader) hideLoader();
+
+        if (data.authError) {
+          cerrarSesionOracion();
+          throw new Error(data.error || "Sesión expirada o no autorizada. Por favor ingresá nuevamente.");
+        }
 
         if (data.error) {
           throw new Error(data.error);
@@ -3454,7 +3525,7 @@
                   <span class="prayer-ministry-badge">🏛️ ${escapeHTML(p.ministerio)}</span>
                   <span class="record-date-badge"><span>📅</span> ${escapeHTML(fechaFormateada)}</span>
                 </div>
-                <button id="${idBtn}" class="btn-copy" onclick="copiarMotivo('${escapeJSString(p.motivo)}', '${idBtn}')">
+                <button id="${idBtn}" class="btn-copy" data-motivo="${escapeHTML(p.motivo)}" onclick="copiarMotivo(this.dataset.motivo, '${idBtn}')">
                   📋 Copiar motivo
                 </button>
               </div>
@@ -3615,7 +3686,7 @@
       }
 
       const usuario = userInput ? userInput.value.trim() : "";
-      const token = passInput ? passInput.value.trim() : "";
+      const claveIngresada = passInput ? passInput.value.trim() : "";
       const remember = rememberCheckbox ? rememberCheckbox.checked : false;
 
       if (!usuario) {
@@ -3627,7 +3698,7 @@
         return;
       }
 
-      if (!token) {
+      if (!claveIngresada) {
         if (errBox) {
           errBox.innerText = "Por favor ingresá la clave de acceso.";
           errBox.style.display = "block";
@@ -3644,31 +3715,21 @@
       showLoader("Verificando credenciales...", "Comprobando acceso al panel de auditoría");
 
       try {
-        const testUrl = `${SCRIPT_URL}?action=buscarAsistenciaPersona&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}&persona=TEST_AUTH_CHECK&dispositivo=Web PWA`;
-        const response = await fetch(testUrl);
-        const responseText = await response.text();
+        const data = await postSobresApi({
+          action: "loginSobres",
+          scope: "auditoria",
+          ministerio: "",
+          password: claveIngresada,
+          usuario: usuario,
+          dispositivo: "Web PWA"
+        });
 
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (pe) {
-          if (responseText.includes("Script Online")) {
-            throw new Error("El Google Apps Script aún no tiene publicado el endpoint de auditoría.\n\nPor favor pegá la versión actualizada en script.google.com y hacé clic en 'Nueva versión' al Implementar.");
-          }
-          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
-        }
-
-        // Interpretación inmediata de respuesta authCheck del backend
-        if (data.success === false) {
+        if (data.authError || data.success === false || !data.token) {
           throw new Error(data.error || "Clave de acceso incorrecta para el panel de auditoría.");
         }
 
-        if (data.authCheck !== true && data.success !== true) {
-          throw new Error("No se pudo comprobar la autorización de auditoría.");
-        }
-
         sesionAuditoriaActiva = {
-          token: token,
+          token: data.token,
           usuario: usuario
         };
 
@@ -3755,16 +3816,18 @@
       try {
         const token = sesionAuditoriaActiva.token;
         const usuario = sesionAuditoriaActiva.usuario || "Auditor";
-        const url = `${SCRIPT_URL}?action=buscarAsistenciaPersona&token=${encodeURIComponent(token)}&usuario=${encodeURIComponent(usuario)}&persona=${encodeURIComponent(persona)}&dispositivo=Web PWA`;
+        const data = await postSobresApi({
+          action: "buscarAsistenciaPersona",
+          token: token,
+          usuario: usuario,
+          persona: persona,
+          dispositivo: "Web PWA"
+        });
 
-        const response = await fetch(url);
-        const responseText = await response.text();
-
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (pe) {
-          throw new Error("Respuesta no válida del servidor: " + responseText.substring(0, 80));
+        if (data.authError) {
+          cerrarSesionAuditoria();
+          alert(data.error || "Tu sesión de auditoría expiró. Por favor ingresá nuevamente.");
+          return;
         }
 
         if (data.success === false) {

@@ -1,8 +1,17 @@
 # Google Apps Script & Backend Server Scripts
 *.gs
+Código.js
+Codigo.js
+ExtraerFechas.js
+ExtraerFechas.txt
+Codigo de appscript pagina web.txt
+appsscript.json
+.clasp.json
+.claspignore
 *APPS-SCRIPT*
 *bot_logic*
 *Script*.txt
 *.txt
+.env*
 .gemini/
 .agents/
