@@ -1,10 +1,12 @@
 // Service Worker para Sobres Gran Rey PWA
-const CACHE_NAME = 'granrey-sobres-v1.1.0';
+const CACHE_NAME = 'granrey-sobres-v1.1.1';
 const ASSETS_TO_CACHE = [
   './',
-  './index.html?v=1.1.0',
+  './index.html',
+  './index.html?v=1.1.1',
   './escudo.png',
   './favicon.png',
+  './manifest.json?v=1.1.1',
   './manifest.json'
 ];
 

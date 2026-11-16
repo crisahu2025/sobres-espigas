@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Espigas - Iglesia Gran Rey</title>
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="manifest" href="manifest.json?v=1.1.0" />
+  <link rel="manifest" href="manifest.json?v=1.1.1" />
   <meta name="theme-color" content="#1d1a18" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -2134,12 +2134,16 @@
         btn.style.display = 'none';
       });
 
-      // Registro de Service Worker para PWA y control de actualización
+      // Registro de Service Worker para PWA y control de actualización inmediata
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=1.1.0').then(reg => {
-          navigator.serviceWorker.addEventListener('controllerchange', () => {
-            window.location.reload();
-          });
+        let swRefreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (swRefreshing) return;
+          swRefreshing = true;
+          window.location.reload();
+        });
+        navigator.serviceWorker.register('./sw.js?v=1.1.1', { updateViaCache: 'none' }).then(reg => {
+          reg.update().catch(() => {});
         }).catch(err => {
           console.warn('SW no registrado:', err);
         });
@@ -2353,22 +2357,72 @@
     function handleFile(input) {
       if (input.files && input.files[0]) {
         const file = input.files[0];
-        if (file.size > 10 * 1024 * 1024) {
-          alert("La imagen es demasiado pesada. Máximo 10MB.");
+        if (file.size > 25 * 1024 * 1024) {
+          alert("La imagen es demasiado pesada. Máximo 25MB.");
           input.value = ""; return;
         }
 
         const reader = new FileReader();
         reader.onload = function (e) {
-          document.getElementById("photoOptionsContainer").style.display = "none";
-          document.getElementById("dropArea").style.display = "block";
-          document.getElementById("imagePreview").src = e.target.result;
-          document.getElementById("imagePreview").style.display = "block";
-          document.getElementById("dropArea").classList.add("has-file");
+          const dataUrlOriginal = e.target.result;
+          const finishImage = (finalDataUrl, fallbackMime) => {
+            document.getElementById("photoOptionsContainer").style.display = "none";
+            document.getElementById("dropArea").style.display = "block";
+            document.getElementById("imagePreview").src = finalDataUrl;
+            document.getElementById("imagePreview").style.display = "block";
+            document.getElementById("dropArea").classList.add("has-file");
 
-          const result = e.target.result;
-          currentData.fotoBase64 = result.split(',')[1];
-          currentData.fotoMimeType = result.substring(result.indexOf(':') + 1, result.indexOf(';'));
+            const commaIdx = finalDataUrl.indexOf(',');
+            currentData.fotoBase64 = commaIdx !== -1 ? finalDataUrl.slice(commaIdx + 1) : finalDataUrl;
+            let parsedMime = "";
+            if (finalDataUrl.startsWith("data:") && finalDataUrl.includes(";")) {
+              parsedMime = finalDataUrl.substring(5, finalDataUrl.indexOf(';')).toLowerCase().trim();
+            }
+            if (!parsedMime || parsedMime === "application/octet-stream") {
+              parsedMime = fallbackMime || "image/jpeg";
+            }
+            if (parsedMime === "image/pjpeg") parsedMime = "image/jpeg";
+            if (parsedMime === "image/x-png") parsedMime = "image/png";
+            currentData.fotoMimeType = parsedMime;
+          };
+
+          // Optimizar peso de foto de celular (> 400KB) para evitar fallas en datos móviles
+          const img = new Image();
+          img.onload = function () {
+            try {
+              const MAX_DIM = 1600;
+              let w = img.naturalWidth || img.width;
+              let h = img.naturalHeight || img.height;
+              if (!w || !h) {
+                finishImage(dataUrlOriginal, file.type);
+                return;
+              }
+              if (file.size <= 450 * 1024 && w <= MAX_DIM && h <= MAX_DIM && /^image\/(jpeg|jpg|png|webp)$/i.test(file.type || "")) {
+                finishImage(dataUrlOriginal, file.type);
+                return;
+              }
+              if (w > MAX_DIM || h > MAX_DIM) {
+                const scale = Math.min(MAX_DIM / w, MAX_DIM / h);
+                w = Math.round(w * scale);
+                h = Math.round(h * scale);
+              }
+              const canvas = document.createElement("canvas");
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext("2d");
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(0, 0, w, h);
+              ctx.drawImage(img, 0, 0, w, h);
+              const compressed = canvas.toDataURL("image/jpeg", 0.82);
+              finishImage(compressed, "image/jpeg");
+            } catch (compErr) {
+              finishImage(dataUrlOriginal, file.type);
+            }
+          };
+          img.onerror = function () {
+            finishImage(dataUrlOriginal, file.type);
+          };
+          img.src = dataUrlOriginal;
         };
         reader.readAsDataURL(file);
       }
@@ -2432,12 +2486,7 @@
       };
 
       try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
+        const result = await postSobresApi(payload);
         hideLoader();
 
         if (result.success) {
